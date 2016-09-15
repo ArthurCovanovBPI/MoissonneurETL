@@ -31,7 +31,7 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 	private Connection localSqliteConnection = null;
 	private Connection uploadDBConnection = null;
 	private final String className = this.getClass().getName();
-	private final String uploadDB = "jdbc:mysql://10.1.2.114/lf_prod";
+	private final String uploadDB = "jdbc:mysql://10.1.2.113/lf_prod";
 	private final String uploadDBlogin = "root";
 	private final String uploadDBpassword = "mysqlbpi";
 	private final String harvestDB = "jdbc:postgresql://10.1.2.8:5432/portfoliodw";
@@ -784,8 +784,8 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 			localSqliteStatement = localSqliteConnection.createStatement(type, mode);
 			RFHarvesterLogger.info(className + " Download Phase 0");
 			downloadPart0(localSqliteStatement);
-//			RFHarvesterLogger.info(className + " Download Phase 1");
-//			downloadPart1(millis, localSqliteStatement);
+			RFHarvesterLogger.info(className + " Download Phase 1");
+			downloadPart1(millis, localSqliteStatement);
 			RFHarvesterLogger.info(className + " Download Phase 2");
 			downloadPart2(uploadsList, localSqliteStatement);
 			RFHarvesterLogger.info(className + " Download Phase 3");

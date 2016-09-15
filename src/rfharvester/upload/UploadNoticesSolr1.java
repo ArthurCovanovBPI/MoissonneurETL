@@ -347,39 +347,4 @@ public class UploadNoticesSolr1 implements RFHarvesterUploaderInterface
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public void restoreOldTable()
-	{
-		try
-		{
-			RFHarvesterLogger.info("solrnotices.deleteByQuery(\"*:*\");");
-			UpdateResponse SOLRresponse = solrnotices.deleteByQuery("*:*");
-			RFHarvesterLogger.debug(SOLRresponse.toString());
-		}
-		catch(SolrServerException | IOException e)
-		{
-			e.printStackTrace();
-			System.exit(0); // Program won't run with uninitialized SOLR.
-		}
-		try
-		{
-			String[] solrindexesdirs = new String[] {};
-			String[] solrcores = new String[] { "notices_old" };
-			RFHarvesterLogger.info("Merging solrcores " + solrcores[0] + " into notices");
-			CoreAdminResponse mergeResponse = CoreAdminRequest.mergeIndexes("notices", solrindexesdirs, solrcores, solrcore);
-			RFHarvesterLogger.debug(mergeResponse.getResponse().toString());
-			RFHarvesterLogger.info("Commit Solr modifications");
-			solrnotices.commit();
-			RFHarvesterLogger.info("SOLR commited");
-		}
-		catch(SolrServerException | IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void postUpdateTable()
-	{}
 }

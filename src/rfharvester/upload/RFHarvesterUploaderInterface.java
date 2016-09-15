@@ -20,6 +20,4 @@ public interface RFHarvesterUploaderInterface
 	public void commit();
 	public void mergeOldTable();
 	public void replaceOldTable();
-	public void postUpdateTable();
-	public void restoreOldTable();
 }

@@ -1271,28 +1271,28 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		if(this.get("dcdate") == null || this.get("dcdate").length()<=0)
 			this.put("solr_date_document", null);
 		else if(this.get("dcdate").length()==4)
-			this.put("solr_date_document", this.get("dcdate")+"-01-01T00:00:00Z");
+			this.put("solr_date_document", this.get("dcdate")+"-01-01T01:00:00Z");
 		else if(this.get("dcdate").length()==6)
 		{
 			int month = Integer.parseInt(this.get("dcdate").substring(4,6));
 			if(month < 1 || month > 12)
-				this.put("solr_date_document", "1000-01-01T00:00:00Z");
+				this.put("solr_date_document", "1000-01-01T01:00:00Z");
 			else
-				this.put("solr_date_document", this.get("dcdate").substring(0,4)+"-"+this.get("dcdate").substring(4,6)+"-01T00:00:00Z");
+				this.put("solr_date_document", this.get("dcdate").substring(0,4)+"-"+this.get("dcdate").substring(4,6)+"-01T01:00:00Z");
 		}
 		else if(this.get("dcdate").length()==8)
 		{
 			int month = Integer.parseInt(this.get("dcdate").substring(4,6));
 			int day = Integer.parseInt(this.get("dcdate").substring(6,8));
 			if(month < 1 || month > 12)
-				this.put("solr_date_document", "1000-01-01T00:00:00Z");
+				this.put("solr_date_document", "1000-01-01T01:00:00Z");
 			else if (day < 1 || day > 31)
-				this.put("solr_date_document", this.get("dcdate").substring(0,4)+"-"+this.get("dcdate").substring(4,6)+"-01T00:00:00Z");
+				this.put("solr_date_document", this.get("dcdate").substring(0,4)+"-"+this.get("dcdate").substring(4,6)+"-01T01:00:00Z");
 			else
-				this.put("solr_date_document", this.get("dcdate").substring(0,4)+"-"+this.get("dcdate").substring(4,6)+"-"+this.get("dcdate").substring(6,8)+"T00:00:00Z");
+				this.put("solr_date_document", this.get("dcdate").substring(0,4)+"-"+this.get("dcdate").substring(4,6)+"-"+this.get("dcdate").substring(6,8)+"T01:00:00Z");
 		}
 		else
-			this.put("solr_date_document", "1000-01-01T00:00:00Z");
+			this.put("solr_date_document", "1000-01-01T01:00:00Z");
 		this.put("solr_dispo_sur_poste", dispo_sur_poste);
 		this.put("solr_dispo_bibliotheque", dispo_bibliotheque);
 		this.put("solr_dispo_access_libre", dispo_access_libre);

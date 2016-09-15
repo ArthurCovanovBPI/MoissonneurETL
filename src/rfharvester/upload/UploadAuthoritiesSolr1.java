@@ -165,14 +165,4 @@ public class UploadAuthoritiesSolr1 implements RFHarvesterUploaderInterface
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public void postUpdateTable()
-	{
-	}
-
-	@Override
-	public void restoreOldTable()
-	{
-	}
 }

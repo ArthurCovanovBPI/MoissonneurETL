@@ -76,51 +76,51 @@ public class MainClass
 //			System.exit(0); // Program won't run with parsing error
 //		}
 
-		try
-		{
-			//TODO: REMOVE THIS FUCKING SHIT!!!
-			// For fuck's sake!
-			// If I find guy who created this stupid replication between the harvested MySQL and the used MySQL I'll chop his fucking head off!!
-			MySQLReplicator replication113 = new MySQLReplicator("jdbc:mysql://10.1.2.113/", "root", "mysqlbpi");
-			MySQLReplicator replication114 = new MySQLReplicator("jdbc:mysql://10.1.2.114/", "root", "mysqlbpi");
-			if(replication113.replicationStatus()==false)
-			{
-				replication113.startReplication();
-				if(replication113.replicationStatus()==true)
-					RFHarvesterLogger.info("Replication started properly on 113");
-				else
-					throw new MySQLReplicatorException("Unable to start replication on 113");
-			}
-			else
-				RFHarvesterLogger.info("Replication already started on 113");
-			if(replication114.replicationStatus()==false)
-			{
-				replication114.startReplication();
-				if(replication114.replicationStatus()==true)
-					RFHarvesterLogger.info("Replication started properly on 114");
-				else
-					throw new MySQLReplicatorException("Unable to start replication on 114");
-			}
-			else
-				RFHarvesterLogger.info("Replication already started on 114");
-		}
-		catch(ClassNotFoundException | SQLException | InterruptedException | MySQLReplicatorException e)
-		{
-			e.printStackTrace();
-			RFHarvesterLogger.error(e.toString());
-			System.exit(0);
-		}
+//		try
+//		{
+//			//TODO: REMOVE THIS FUCKING SHIT!!!
+//			// For fuck's sake!
+//			// If I find guy who created this stupid replication between the harvested MySQL and the used MySQL I'll chop his fucking head off!!
+//			MySQLReplicator replication113 = new MySQLReplicator("jdbc:mysql://10.1.2.113/", "root", "mysqlbpi");
+//			MySQLReplicator replication114 = new MySQLReplicator("jdbc:mysql://10.1.2.114/", "root", "mysqlbpi");
+//			if(replication113.replicationStatus()==false)
+//			{
+//				replication113.startReplication();
+//				if(replication113.replicationStatus()==true)
+//					RFHarvesterLogger.info("Replication started properly on 113");
+//				else
+//					throw new MySQLReplicatorException("Unable to start replication on 113");
+//			}
+//			else
+//				RFHarvesterLogger.info("Replication already started on 113");
+//			if(replication114.replicationStatus()==false)
+//			{
+//				replication114.startReplication();
+//				if(replication114.replicationStatus()==true)
+//					RFHarvesterLogger.info("Replication started properly on 114");
+//				else
+//					throw new MySQLReplicatorException("Unable to start replication on 114");
+//			}
+//			else
+//				RFHarvesterLogger.info("Replication already started on 114");
+//		}
+//		catch(ClassNotFoundException | SQLException | InterruptedException | MySQLReplicatorException e)
+//		{
+//			e.printStackTrace();
+//			RFHarvesterLogger.error(e.toString());
+//			System.exit(0);
+//		}
 
-//		final RFHarvesterUploaderInterface controlsMySQLUploader = new UploadControlsMySQL(collectionId);
-//		uploadsList.add(controlsMySQLUploader);
-//		final RFHarvesterUploaderInterface metadatasMySQLUploader = new UploadMetadatasMySQL(collectionId);
-//		uploadsList.add(metadatasMySQLUploader);
-//		final RFHarvesterUploaderInterface portfoliodatasMySQLUploader = new UploadPortfolioDatasMySQL(collectionId);
-//		uploadsList.add(portfoliodatasMySQLUploader);
-//		final RFHarvesterUploaderInterface volumesMySQLUploader = new UploadVolumesMySQL(collectionId);
-//		uploadsList.add(volumesMySQLUploader);
-//		final RFHarvesterUploaderInterface collectionsMySQLUploader = new UploadCollectionsMySQL(collectionId);
-//		uploadsList.add(collectionsMySQLUploader);
+		final RFHarvesterUploaderInterface controlsMySQLUploader = new UploadControlsMySQL(collectionId);
+		uploadsList.add(controlsMySQLUploader);
+		final RFHarvesterUploaderInterface metadatasMySQLUploader = new UploadMetadatasMySQL(collectionId);
+		uploadsList.add(metadatasMySQLUploader);
+		final RFHarvesterUploaderInterface portfoliodatasMySQLUploader = new UploadPortfolioDatasMySQL(collectionId);
+		uploadsList.add(portfoliodatasMySQLUploader);
+		final RFHarvesterUploaderInterface volumesMySQLUploader = new UploadVolumesMySQL(collectionId);
+		uploadsList.add(volumesMySQLUploader);
+		final RFHarvesterUploaderInterface collectionsMySQLUploader = new UploadCollectionsMySQL(collectionId);
+		uploadsList.add(collectionsMySQLUploader);
 
 //		final RFHarvesterUploaderInterface noticesSOLRUploader = new UploadNoticesSolr(collectionId);
 //		uploadsList.add(noticesSOLRUploader);
@@ -191,34 +191,16 @@ public class MainClass
 
 		RFHarvesterLogger.info("Begin merging phase");
 		es = Executors.newCachedThreadPool();
-////		for(final RFHarvesterUploaderInterface UI : uploadsList)
-////			es.execute(new Runnable()
-////			{
-////				public void run()
-////				{
-////					UI.mergeOldTable();
-////				}
-////			});
-////
-////		es.shutdown();
-////		try
-////		{
-////			while(!es.awaitTermination(10, TimeUnit.SECONDS));
-////		}
-////		catch(InterruptedException e)
-////		{
-////			e.printStackTrace();
-////			System.exit(0);
-////		}
 
-//		controlsMySQLUploader.mergeOldTable();
-////		noticesSOLRUploader.mergeOldTable();
-////		noticesSOLR1Uploader.mergeOldTable();
-//		noticesSOLR6Uploader.mergeOldTable();
-//		metadatasMySQLUploader.mergeOldTable();
-//		volumesMySQLUploader.mergeOldTable();
-//		portfoliodatasMySQLUploader.mergeOldTable();
-//		collectionsMySQLUploader.mergeOldTable();
+
+		controlsMySQLUploader.mergeOldTable();
+//		noticesSOLRUploader.mergeOldTable();
+//		noticesSOLR1Uploader.mergeOldTable();
+		noticesSOLR6Uploader.mergeOldTable();
+		metadatasMySQLUploader.mergeOldTable();
+		volumesMySQLUploader.mergeOldTable();
+		portfoliodatasMySQLUploader.mergeOldTable();
+		collectionsMySQLUploader.mergeOldTable();
 
 		RFHarvesterLogger.info("Begin replacement phase");
 		es = Executors.newCachedThreadPool();
@@ -255,41 +237,41 @@ public class MainClass
 		}
 
 		es = Executors.newCachedThreadPool();
-//		es.execute(new Runnable()
-//		{
-//			public void run()
-//			{
-//				controlsMySQLUploader.replaceOldTable();
-//			}
-//		});
-//		es.execute(new Runnable()
-//		{
-//			public void run()
-//			{
-//				metadatasMySQLUploader.replaceOldTable();
-//			}
-//		});
-//		es.execute(new Runnable()
-//		{
-//			public void run()
-//			{
-//				portfoliodatasMySQLUploader.replaceOldTable();
-//			}
-//		});
-//		es.execute(new Runnable()
-//		{
-//			public void run()
-//			{
-//				volumesMySQLUploader.replaceOldTable();
-//			}
-//		});
-//		es.execute(new Runnable()
-//		{
-//			public void run()
-//			{
-//				collectionsMySQLUploader.replaceOldTable();
-//			}
-//		});
+		es.execute(new Runnable()
+		{
+			public void run()
+			{
+				controlsMySQLUploader.replaceOldTable();
+			}
+		});
+		es.execute(new Runnable()
+		{
+			public void run()
+			{
+				metadatasMySQLUploader.replaceOldTable();
+			}
+		});
+		es.execute(new Runnable()
+		{
+			public void run()
+			{
+				portfoliodatasMySQLUploader.replaceOldTable();
+			}
+		});
+		es.execute(new Runnable()
+		{
+			public void run()
+			{
+				volumesMySQLUploader.replaceOldTable();
+			}
+		});
+		es.execute(new Runnable()
+		{
+			public void run()
+			{
+				collectionsMySQLUploader.replaceOldTable();
+			}
+		});
 		es.shutdown();
 		try
 		{

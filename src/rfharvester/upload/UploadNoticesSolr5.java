@@ -33,26 +33,9 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 	private final String zookeeper3 = "10.1.2.107:2181";
 	private final List<String> zookeepers = Arrays.asList(zookeeper1, zookeeper2, zookeeper3);
 	CloudSolrClient client;
-	CloudSolrClient client_new;
 
-	private final String SOLR1url = "http://10.1.2.216:8983/solr/";
-	private final String SOLR2url = "http://10.1.2.218:8983/solr/";
-	private SolrClient solr1core = null;
-	private SolrClient solr2core = null;
-
-//	private final String SOLRurl = "http://10.1.2.140:8080/solr/";
-//	private final String SOLRurl = "http://10.1.2.114:8080/solr/";
-//	private final String SOLRurl = "http://10.1.2.216:8983/solr/";
-//	private final String SOLRnoticesURL = SOLRurl + "notices/";
-//	private final String SOLRnotice_newURL = SOLRurl + "notices_new/";
-//	private final String SOLRnotice_oldURL = SOLRurl + "notices_old/";
-//	private SolrClient solrcore = null;
-//	private SolrClient solrnotices = null;
-//	private SolrClient solrnotices_new = null;
-//	private SolrClient solrnotices_old = null;
-
-	SimpleDateFormat harvestingDateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
-	SimpleDateFormat dateDocumentFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
+	SimpleDateFormat harvestingDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.FRANCE);
+	SimpleDateFormat dateDocumentFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 
 	Collection<SolrInputDocument> notices = new ArrayList<SolrInputDocument>();
 
@@ -80,57 +63,28 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 	{
 		try
 		{
-//			RFHarvesterLogger.debug("solrnotices_new.deleteByQuery(\"*:*\");");
-//			UpdateResponse SOLRresponse = solrnotices_new.deleteByQuery("*:*");
-//			RFHarvesterLogger.debug(SOLRresponse.toString());
-//			solrnotices_new.commit();
-
-			RFHarvesterLogger.debug("client_new.deleteByQuery(\"*:*\");");
-			UpdateResponse SOLRresponse = client_new.deleteByQuery("*:*");
+			RFHarvesterLogger.debug("client.deleteByQuery(\"collection_id:(" + collection_id + ")\");");
+			UpdateResponse SOLRresponse = client.deleteByQuery("collection_id:(" + collection_id + ")");
 			RFHarvesterLogger.debug(SOLRresponse.toString());
-			client_new.commit();
-
-//			RFHarvesterLogger.debug("solrnotices.deleteByQuery(\"*:*)\");");
-//			SOLRresponse = solrnotices.deleteByQuery("*:*");
-//			RFHarvesterLogger.debug(SOLRresponse.toString());
-//			solrnotices.commit();
-
-//			RFHarvesterLogger.debug("solrnotices.deleteByQuery(\"-(collection_id:(5)))\");");
-//			SOLRresponse = solrnotices.deleteByQuery("-(collection_id:(5))");
-//			RFHarvesterLogger.debug(SOLRresponse.toString());
-//			solrnotices.commit();
-			
-//			RFHarvesterLogger.debug("solrnotices_old.deleteByQuery(\"*:*\");");
-//			SOLRresponse = solrnotices_old.deleteByQuery("*:*");
-//			RFHarvesterLogger.debug(SOLRresponse.toString());
-//			solrnotices_old.commit();
 		}
 		catch(SolrServerException | IOException e)
 		{
 			e.printStackTrace();
+			try
+			{
+				client.rollback();
+			}
+			catch (SolrServerException | IOException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			System.exit(0); // Program won't run with uninitialized SOLR.
 		}
 	}
 
 	public void copyIntoOld()
 	{
-//		try
-//		{
-//
-////			String[] solrindexesdirs = new String[] {};
-////			String[] solrcores = new String[] { "notices" };
-////			RFHarvesterLogger.info("Merging solrcores " + solrcores[0] + " into notices_old");
-////			CoreAdminResponse mergeResponse = CoreAdminRequest.mergeIndexes("notices_old", solrindexesdirs, solrcores, solrcore);
-////			RFHarvesterLogger.debug(mergeResponse.getResponse().toString());
-////			RFHarvesterLogger.info("Commit Solr_old modifications");
-////			solrnotices_old.commit();
-//			RFHarvesterLogger.info("SOLR_old commited");
-//		}
-//		catch(SolrServerException | IOException e)
-//		{
-//			e.printStackTrace();
-//			System.exit(0); // Program won't run with uninitialized SOLR.
-//		}
 	}
 
 	public UploadNoticesSolr5(int collectionId)
@@ -141,25 +95,6 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 		client = new CloudSolrClient(zookeepersList);//zookeepersList);
 		System.out.println("Connection with " + client.getZkHost() + " established");
 		client.setDefaultCollection("notices");
-
-		client_new = new CloudSolrClient(zookeepersList);//zookeepersList);
-		System.out.println("Connection with " + client_new.getZkHost() + " established");
-		client_new.setDefaultCollection("notices_new");
-//		System.out.println("Deleting datas from Client.");
-//		client.deleteByQuery("*:*");
-//		System.out.println("DATAS DELETED");
-
-		solr1core = new HttpSolrClient(SOLR1url);
-		System.out.println("Connection with " + SOLR1url + " established");
-
-		solr2core = new HttpSolrClient(SOLR2url);
-		System.out.println("Connection with " + SOLR2url + " established");
-//		solrnotices = new HttpSolrClient(SOLRnoticesURL);
-//		RFHarvesterLogger.info("Connection with " + SOLRnoticesURL + " established");
-//		solrnotices_new = new HttpSolrClient(SOLRnotice_newURL);
-//		RFHarvesterLogger.info("Connection with " + SOLRnotice_newURL + " established");
-//		solrnotices_old = new HttpSolrClient(SOLRnotice_oldURL);
-//		RFHarvesterLogger.info("Connection with " + SOLRnotice_oldURL + " established");
 		collection_id = collectionId;
 	}
 
@@ -234,12 +169,11 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 				{
 					if(rows.get("solr_date_document").length()>0)
 						document.addField("date_document", dateDocumentFormatter.parse(rows.get("solr_date_document")));
-//					System.out.println(rows.get("solr_id"));
-//					System.out.println("\t"+rows.get("solr_date_document"));
-//					System.out.println("\t"+dateDocumentFormatter.parse(rows.get("solr_date_document")));
 //					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
-//					System.out.println("solr_date_document : " + rows.get("solr_date_document"));
-//					System.out.println("date_document : " + document.get("date_document"));
+//					System.out.println("solr_date_document : " + rows.get("solr_id"));
+//					System.out.println("\tsolr_date_document : " + rows.get("solr_date_document"));
+//					System.out.println("\tdate_document : " + document.get("date_document"));
+//					System.out.println("\tdateDocumentFormatter.parse(...) : "+dateDocumentFormatter.parse(rows.get("solr_date_document")));
 				}
 				catch(ParseException e)
 				{
@@ -281,6 +215,15 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 				if(k.contains("solr"))
 					System.out.println(k + " - " + rows.get(k));
 			}
+			try
+			{
+				client.rollback();
+			}
+			catch (SolrServerException | IOException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			System.exit(0);
 		}
 		notices.add(document);
@@ -302,12 +245,21 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 			{
 				RFHarvesterLogger.info("solrnotices_new.deleteByQuery(\"id:(" + error + ")\");");
 //				UpdateResponse SOLRresponse = solrnotices_new.deleteByQuery("id:(" + error + ")");
-				UpdateResponse SOLRresponse = client_new.deleteByQuery("id:(" + error + ")");
+				UpdateResponse SOLRresponse = client.deleteByQuery("id:(" + error + ")");
 				RFHarvesterLogger.debug(SOLRresponse.toString());
 			}
 			catch(SolrServerException | IOException e)
 			{
 				e.printStackTrace();
+				try
+				{
+					client.rollback();
+				}
+				catch (SolrServerException | IOException e1)
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				System.exit(0); // Program won't run with uninitialized SOLR.
 			}
 		}
@@ -349,8 +301,8 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 			}
 //			responseAdding = solrnotices_new.add(notices);
 //			solrnotices_new.commit(true, true);
-			responseAdding = client_new.add(notices);
-//			client_new.commit(true, true);
+			responseAdding = client.add(notices);
+//			client.commit(true, true);
 		}
 		catch(SolrServerException | IOException e)
 		{
@@ -372,93 +324,26 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 	{
 		try
 		{
-			client_new.commit(true, true);
-			RFHarvesterLogger.info("solrnotices.deleteByQuery(\"collection_id:(" + collection_id + ")\");");
-//			UpdateResponse SOLRresponse = solrnotices.deleteByQuery("collection_id:(" + collection_id + ")");
-			UpdateResponse SOLRresponse = client.deleteByQuery("collection_id:(" + collection_id + ")");
-			RFHarvesterLogger.debug(SOLRresponse.toString());
-		}
-		catch(SolrServerException | IOException e)
-		{
-			e.printStackTrace();
-			System.exit(0); // Program won't run with uninitialized SOLR.
-		}
-		try
-		{
-			final String[] solrindexesdirs = new String[] {};
-//			String[] solrcores = new String[] { "notices_new" };
-			final String[] solr1cores = new String[] { "notices_new_shard1_replica2" };
-			final String[] solr2cores = new String[] { "notices_new_shard1_replica1" };
-			RFHarvesterLogger.info("Merging solrcores " + solr1cores[0] + " into notices");
-			RFHarvesterLogger.info("Merging solrcores " + solr2cores[0] + " into notices");
-//			CoreAdminResponse mergeResponse = CoreAdminRequest.mergeIndexes("notices_shard1_replica1", solrindexesdirs, solrcores, solrcore);
-
-			ExecutorService es = Executors.newCachedThreadPool();
-			es.execute(new Runnable()
-			{
-				public void run()
-				{
-					try
-					{
-						CoreAdminResponse mergeResponse1 = CoreAdminRequest.mergeIndexes("notices_shard1_replica1", solrindexesdirs, solr1cores, solr1core);
-						RFHarvesterLogger.debug(mergeResponse1.getResponse().toString());
-					}
-					catch (SolrServerException | IOException e)
-					{
-						e.printStackTrace();
-					}
-				}
-			});
-			es.execute(new Runnable()
-			{
-				public void run()
-				{
-					try
-					{
-						CoreAdminResponse mergeResponse2 = CoreAdminRequest.mergeIndexes("notices_shard1_replica2", solrindexesdirs, solr2cores, solr2core);
-						RFHarvesterLogger.debug(mergeResponse2.getResponse().toString());
-					}
-					catch (SolrServerException | IOException e)
-					{
-						e.printStackTrace();
-					}
-				}
-			});
-
-			es.shutdown();
-			try
-			{
-				while(!es.awaitTermination(10, TimeUnit.SECONDS));
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-				System.exit(0);
-			}
-
 			RFHarvesterLogger.info("Commit Solr modifications");
-//			solrnotices.commit();
-//			UpdateRequest req = new UpdateRequest();
-//			req.setAction(UpdateRequest.ACTION.COMMIT, waitFlush, waitSearcher)
-//			client.request(null, "notices");
-
-//			client.request(request, collection)
 
 			client.commit();
 			RFHarvesterLogger.info("SOLR commited");
+//			client.optimize();
+//			RFHarvesterLogger.info("SOLR optimized");
 		}
 		catch(SolrServerException | IOException e)
 		{
 			e.printStackTrace();
+			try
+			{
+				client.rollback();
+				RFHarvesterLogger.info("Client rollbacked");
+			}
+			catch (SolrServerException | IOException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
-
-	@Override
-	public void restoreOldTable()
-	{
-	}
-
-	@Override
-	public void postUpdateTable()
-	{}
 }

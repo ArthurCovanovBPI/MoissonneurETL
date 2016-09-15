@@ -55,7 +55,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 				//Special case for control, we need control's ID to insert in other tables
 				for(RFHarvesterUploaderV2Interface uploader : uploaders)
 				{
-					if(uploader.getClass().toString().compareTo(UploadControlsMySQLV2.class.toString())==0)
+					if(uploader.getClass().toString().compareTo(UploadControlsMySQL5V2.class.toString())==0)
 					{
 						in = uploader.insertRow(row);
 						success.add(uploader);
@@ -64,7 +64,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 				//Then we insert in other uploaders
 				for(RFHarvesterUploaderV2Interface uploader : uploaders)
 				{
-					if(uploader.getClass().toString().compareTo(UploadControlsMySQLV2.class.toString())!=0)
+					if(uploader.getClass().toString().compareTo(UploadControlsMySQL5V2.class.toString())!=0)
 					{
 						if(in!=null)
 						{

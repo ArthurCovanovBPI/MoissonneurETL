@@ -17,8 +17,11 @@ import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
 import rfharvester.upload.RFHarvesterUploaderV2Bundle;
 import rfharvester.upload.RFHarvesterUploaderV2ClassException;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
+import rfharvester.upload.UploadCollectionsMySQL5V2;
 import rfharvester.upload.UploadCollectionsMySQLV2;
+import rfharvester.upload.UploadControlsMySQL5V2;
 import rfharvester.upload.UploadControlsMySQLV2;
+import rfharvester.upload.UploadMetadatasMySQL5V2;
 import rfharvester.upload.UploadMetadatasMySQLV2;
 import rfharvester.upload.UploadNoticesSolr5V2;
 import rfharvester.upload.UploadNoticesSolrV2;
@@ -95,9 +98,9 @@ public class HarvestConfiguration
 
 				String MySQLUploadDB = "10.1.2.113/lf_prod";
 //				String MySQLUploadDB = "10.1.2.140/lf_prod";
-				UploadControlsMySQLV2 ControlsUploader = new UploadControlsMySQLV2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
-				UploadMetadatasMySQLV2 MetadatasUploader = new UploadMetadatasMySQLV2(MySQLUploadDB, recomandedCommit, collectionID);
-				UploadCollectionsMySQLV2 CollectionsUploader = new UploadCollectionsMySQLV2(MySQLUploadDB, collectionID);
+				UploadControlsMySQL5V2 ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
+				UploadMetadatasMySQL5V2 MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+				UploadCollectionsMySQL5V2 CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
 
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 

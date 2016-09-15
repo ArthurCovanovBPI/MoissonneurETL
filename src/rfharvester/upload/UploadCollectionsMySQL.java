@@ -230,61 +230,6 @@ public class UploadCollectionsMySQL implements RFHarvesterUploaderInterface
 	}
 
 	@Override
-	public void postUpdateTable()
-	{
-	}
-
-	@Override
-	public void restoreOldTable()
-	{
-		String query;
-		Statement uploadDBStatement = null;
-		try
-		{
-			int type = ResultSet.TYPE_FORWARD_ONLY;
-			int mode = ResultSet.CONCUR_READ_ONLY;
-			uploadDBStatement = uploadDBConnection.createStatement(type, mode);
-
-			query = "DROP TABLE IF EXISTS " + tableName + "_new";
-			RFHarvesterLogger.debug(query);
-			uploadDBStatement.execute(query);
-
-			query = "ALTER TABLE " + tableName + " RENAME TO " + tableName + "_new";
-			RFHarvesterLogger.debug(query);
-			uploadDBStatement.execute(query);
-		}
-		catch(SQLException e)
-		{
-			RFHarvesterLogger.error(e.getClass().getName() + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-		try
-		{
-			query = "ALTER TABLE " + tableName + "_old" + " RENAME TO " + tableName;
-			RFHarvesterLogger.debug(query);
-			uploadDBStatement.execute(query);
-		}
-		catch(SQLException e)
-		{
-			RFHarvesterLogger.error(e.getClass().getName() + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				if(uploadDBStatement != null)
-					uploadDBStatement.close();
-			}
-			catch(SQLException e)
-			{
-				RFHarvesterLogger.error("Unable to close external database statement: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
 	protected void finalize() throws Throwable
 	{
 

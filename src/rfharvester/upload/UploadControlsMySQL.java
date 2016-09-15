@@ -346,38 +346,6 @@ public class UploadControlsMySQL implements RFHarvesterUploaderInterface
 	@Override
 	public void mergeOldTable()
 	{
-//		String query;
-//		Statement uploadDBStatement = null;
-//		try
-//		{
-//			int type = ResultSet.TYPE_FORWARD_ONLY;
-//			int mode = ResultSet.CONCUR_READ_ONLY;
-//			uploadDBStatement = uploadDBConnection.createStatement(type, mode);
-//			query = "INSERT INTO " + tableName + "_new SELECT * FROM " + tableName + " WHERE collection_id != " + collection_id;
-//			query = "INSERT INTO " + tableName + "_new(" + tableColumnsText + ") SELECT " + tableColumnsText + " FROM " + tableName + " WHERE collection_id != " + collection_id;
-//			RFHarvesterLogger.debug(query);
-//			uploadDBStatement.execute(query);
-//		}
-//		catch(SQLException e)
-//		{
-//			RFHarvesterLogger.error(e.getClass().getName() + ": " + e.getMessage());
-//			e.printStackTrace();
-//			System.exit(0);
-//		}
-//		finally
-//		{
-//			try
-//			{
-//				if(uploadDBStatement != null)
-//					uploadDBStatement.close();
-//				RFHarvesterLogger.info(this.className + ".mergeOldTable() finished successfully");
-//			}
-//			catch(SQLException e)
-//			{
-//				RFHarvesterLogger.error("Unable to close external database statement: " + e.getMessage());
-//				e.printStackTrace();
-//			}
-//		}
 	}
 
 	@Override
@@ -407,61 +375,6 @@ public class UploadControlsMySQL implements RFHarvesterUploaderInterface
 		try
 		{
 			query = "ALTER TABLE " + tableName + "_new" + " RENAME TO " + tableName;
-			RFHarvesterLogger.debug(query);
-			uploadDBStatement.execute(query);
-		}
-		catch(SQLException e)
-		{
-			RFHarvesterLogger.error(e.getClass().getName() + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				if(uploadDBStatement != null)
-					uploadDBStatement.close();
-			}
-			catch(SQLException e)
-			{
-				RFHarvesterLogger.error("Unable to close external database statement: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void postUpdateTable()
-	{
-	}
-
-	@Override
-	public void restoreOldTable()
-	{
-		String query;
-		Statement uploadDBStatement = null;
-		try
-		{
-			int type = ResultSet.TYPE_FORWARD_ONLY;
-			int mode = ResultSet.CONCUR_READ_ONLY;
-			uploadDBStatement = uploadDBConnection.createStatement(type, mode);
-
-			query = "DROP TABLE IF EXISTS " + tableName + "_new";
-			RFHarvesterLogger.debug(query);
-			uploadDBStatement.execute(query);
-
-			query = "ALTER TABLE " + tableName + " RENAME TO " + tableName + "_new";
-			RFHarvesterLogger.debug(query);
-			uploadDBStatement.execute(query);
-		}
-		catch(SQLException e)
-		{
-			RFHarvesterLogger.error(e.getClass().getName() + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-		try
-		{
-			query = "ALTER TABLE " + tableName + "_old" + " RENAME TO " + tableName;
 			RFHarvesterLogger.debug(query);
 			uploadDBStatement.execute(query);
 		}
