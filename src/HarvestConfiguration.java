@@ -86,6 +86,8 @@ public class HarvestConfiguration
 		int recomandedCommit = 1000;
 		switch(harvesterID)
 		{
+			case "1":
+			break;
 			case "3":
 //				UploadNoticesSolrV2 SOLR1Uploader = new UploadNoticesSolrV2("http://10.1.2.114:8080/solr/", recomandedCommit, collectionID, collectionName, disponibilite);
 //				UploadNoticesSolrV2 SOLR2Uploader = new UploadNoticesSolrV2("http://10.1.2.113:8080/solr/", recomandedCommit, collectionID, collectionName, disponibilite);
