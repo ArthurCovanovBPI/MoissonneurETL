@@ -98,7 +98,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 			//Special case for control, we need control's ID to insert in other tables
 			for(RFHarvesterUploaderV2Interface uploader : uploaders)
 			{
-				if(uploader.getClass().toString().compareTo(UploadNoticesSolrV2.class.toString())==0)
+				if(uploader.getClass().toString().compareTo(UploadNoticesSolr5V2.class.toString())==0)
 				{
 					uploader.end();
 				}
@@ -106,7 +106,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 			//Then we insert in other uploaders
 			for(RFHarvesterUploaderV2Interface uploader : uploaders)
 			{
-				if(uploader.getClass().toString().compareTo(UploadNoticesSolrV2.class.toString())!=0)
+				if(uploader.getClass().toString().compareTo(UploadNoticesSolr5V2.class.toString())!=0)
 				{
 					uploader.end();
 				}

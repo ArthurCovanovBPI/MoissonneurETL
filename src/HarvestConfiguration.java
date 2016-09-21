@@ -18,13 +18,9 @@ import rfharvester.upload.RFHarvesterUploaderV2Bundle;
 import rfharvester.upload.RFHarvesterUploaderV2ClassException;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
 import rfharvester.upload.UploadCollectionsMySQL5V2;
-import rfharvester.upload.UploadCollectionsMySQLV2;
 import rfharvester.upload.UploadControlsMySQL5V2;
-import rfharvester.upload.UploadControlsMySQLV2;
 import rfharvester.upload.UploadMetadatasMySQL5V2;
-import rfharvester.upload.UploadMetadatasMySQLV2;
 import rfharvester.upload.UploadNoticesSolr5V2;
-import rfharvester.upload.UploadNoticesSolrV2;
 
 public class HarvestConfiguration
 {

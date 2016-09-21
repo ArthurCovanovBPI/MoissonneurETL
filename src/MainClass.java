@@ -10,9 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.output.TeeOutputStream;
 
-import bpi.replication.MySQLReplicator;
-import bpi.replication.MySQLReplicatorException;
-
 import rfharvester.ExitCodes;
 import rfharvester.RFHarvesterConfigurationClassException;
 import rfharvester.download.PortfolioDownloader;
@@ -24,14 +21,10 @@ import rfharvester.logger.RFHarvesterState;
 import rfharvester.upload.RFHarvesterUploaderInterface;
 import rfharvester.upload.RFHarvesterUploaderV2ClassException;
 import rfharvester.upload.UploadAuthoritiesSolr;
-import rfharvester.upload.UploadAuthoritiesSolr1;
 import rfharvester.upload.UploadCollectionsMySQL;
 import rfharvester.upload.UploadControlsMySQL;
 import rfharvester.upload.UploadMetadatasMySQL;
-import rfharvester.upload.UploadNoticesSolr;
-import rfharvester.upload.UploadNoticesSolr1;
 import rfharvester.upload.UploadNoticesSolr5;
-import rfharvester.upload.UploadNoticesSolrV2;
 import rfharvester.upload.UploadVolumesMySQL;
 import rfharvester.upload.UploadPortfolioDatasMySQL;
 
@@ -76,41 +69,6 @@ public class MainClass
 //			System.exit(0); // Program won't run with parsing error
 //		}
 
-//		try
-//		{
-//			//TODO: REMOVE THIS FUCKING SHIT!!!
-//			// For fuck's sake!
-//			// If I find guy who created this stupid replication between the harvested MySQL and the used MySQL I'll chop his fucking head off!!
-//			MySQLReplicator replication113 = new MySQLReplicator("jdbc:mysql://10.1.2.113/", "root", "mysqlbpi");
-//			MySQLReplicator replication114 = new MySQLReplicator("jdbc:mysql://10.1.2.114/", "root", "mysqlbpi");
-//			if(replication113.replicationStatus()==false)
-//			{
-//				replication113.startReplication();
-//				if(replication113.replicationStatus()==true)
-//					RFHarvesterLogger.info("Replication started properly on 113");
-//				else
-//					throw new MySQLReplicatorException("Unable to start replication on 113");
-//			}
-//			else
-//				RFHarvesterLogger.info("Replication already started on 113");
-//			if(replication114.replicationStatus()==false)
-//			{
-//				replication114.startReplication();
-//				if(replication114.replicationStatus()==true)
-//					RFHarvesterLogger.info("Replication started properly on 114");
-//				else
-//					throw new MySQLReplicatorException("Unable to start replication on 114");
-//			}
-//			else
-//				RFHarvesterLogger.info("Replication already started on 114");
-//		}
-//		catch(ClassNotFoundException | SQLException | InterruptedException | MySQLReplicatorException e)
-//		{
-//			e.printStackTrace();
-//			RFHarvesterLogger.error(e.toString());
-//			System.exit(0);
-//		}
-
 		final RFHarvesterUploaderInterface controlsMySQLUploader = new UploadControlsMySQL(collectionId);
 		uploadsList.add(controlsMySQLUploader);
 		final RFHarvesterUploaderInterface metadatasMySQLUploader = new UploadMetadatasMySQL(collectionId);
@@ -122,10 +80,6 @@ public class MainClass
 		final RFHarvesterUploaderInterface collectionsMySQLUploader = new UploadCollectionsMySQL(collectionId);
 		uploadsList.add(collectionsMySQLUploader);
 
-//		final RFHarvesterUploaderInterface noticesSOLRUploader = new UploadNoticesSolr(collectionId);
-//		uploadsList.add(noticesSOLRUploader);
-//		final RFHarvesterUploaderInterface noticesSOLR1Uploader = new UploadNoticesSolr1(collectionId);
-//		uploadsList.add(noticesSOLR1Uploader);
 		final RFHarvesterUploaderInterface noticesSOLR6Uploader = new UploadNoticesSolr5(collectionId);
 		uploadsList.add(noticesSOLR6Uploader);
 
@@ -289,17 +243,13 @@ public class MainClass
 
 		ArrayList<RFHarvesterUploaderInterface> uploadsList = new ArrayList<RFHarvesterUploaderInterface>();
 		final RFHarvesterUploaderInterface authoritiesSOLRUploader = new UploadAuthoritiesSolr();
-		final RFHarvesterUploaderInterface authoritiesSOLR1Uploader = new UploadAuthoritiesSolr1();
 		uploadsList.add(authoritiesSOLRUploader);
-		uploadsList.add(authoritiesSOLR1Uploader);
 
 		RFHarvesterLogger.info("Begin merging phase");
 		authoritiesSOLRUploader.mergeOldTable();
-		authoritiesSOLR1Uploader.mergeOldTable();
 
 		RFHarvesterLogger.info("Begin replacement phase");
 		authoritiesSOLRUploader.replaceOldTable();
-		authoritiesSOLR1Uploader.replaceOldTable();
 	}
 
 	private void runConfiguration(String configurationIDString) throws SQLException, ClassNotFoundException, RFHarvesterConfigurationClassException, RFHarvesterDownloaderV2ClassException, RFHarvesterUploaderV2ClassException

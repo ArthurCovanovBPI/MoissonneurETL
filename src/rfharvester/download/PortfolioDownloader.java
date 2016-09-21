@@ -730,12 +730,12 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 			RFHarvesterLogger.info(i + " rows sent.");
 
 			RFHarvesterState.updateHarvestedDocuments(i);
-//			if(i<minHarvest)
-//			{
-//				RFHarvesterLogger.error("Less than " + minHarvest + " harvested notices.\n                                                 Harvest canceled.");
-//				RFHarvesterState.updateStatus("ERREUR!!!");
-//				System.exit(0);
-//			}
+			if(i<minHarvest)
+			{
+				RFHarvesterLogger.error("Less than " + minHarvest + " harvested notices.\n                                                 Harvest canceled.");
+				RFHarvesterState.updateStatus("ERREUR!!!");
+				System.exit(0);
+			}
 			if(transfoFailCount != 0)
 				RFHarvesterLogger.warning(transfoFailCount + " on " + i + " rows transformation failed.");
 			else
