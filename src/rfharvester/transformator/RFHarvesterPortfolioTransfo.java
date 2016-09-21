@@ -1296,7 +1296,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		this.put("solr_dispo_sur_poste", dispo_sur_poste);
 		this.put("solr_dispo_bibliotheque", dispo_bibliotheque);
 		this.put("solr_dispo_access_libre", dispo_access_libre);
-		this.put("solr_boost", "" + (3000 + revueBoost));
+		this.put("solr_boost", "" + (5000 + revueBoost));
 //		this.put("solr_boost", "" + (5000));
 		this.put("solr_dispo_avec_reservation", dispo_avec_reservation);
 		this.put("solr_dispo_broadcast_group", dispo_broadcast_group);
