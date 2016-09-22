@@ -89,21 +89,15 @@ public class HarvestConfiguration
 			case "1":
 			break;
 			case "3":
-//				UploadNoticesSolrV2 SOLR1Uploader = new UploadNoticesSolrV2("http://10.1.2.114:8080/solr/", recomandedCommit, collectionID, collectionName, disponibilite);
-//				UploadNoticesSolrV2 SOLR2Uploader = new UploadNoticesSolrV2("http://10.1.2.113:8080/solr/", recomandedCommit, collectionID, collectionName, disponibilite);
-//				UploadNoticesSolrV2 SOLR3Uploader = new UploadNoticesSolrV2("http://10.1.2.140:8080/solr/", recomandedCommit, collectionID, collectionName, disponibilite);
 				UploadNoticesSolr5V2 SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
 				String MySQLUploadDB = "10.1.2.113/lf_prod";
-//				String MySQLUploadDB = "10.1.2.140/lf_prod";
 				UploadControlsMySQL5V2 ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
 				UploadMetadatasMySQL5V2 MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
 				UploadCollectionsMySQL5V2 CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
 
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
-//				uploader = new RFHarvesterUploaderV2Bundle(SOLR1Uploader, SOLR2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
-//				uploader = new RFHarvesterUploaderV2Bundle(SOLR3Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
 				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
 
 				downloader = new OAIDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
