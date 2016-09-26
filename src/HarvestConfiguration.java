@@ -97,7 +97,7 @@ public class HarvestConfiguration
 
 		switch(harvesterID)
 		{
-			case "1":
+			case "1": //Portfolio
 				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
 				MySQLUploadDB = "10.1.2.113/lf_prod";
@@ -113,7 +113,21 @@ public class HarvestConfiguration
 
 //				downloader = new PortfolioDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
 			break;
-			case "3":
+			case "3": //OAI_DC
+				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+
+				MySQLUploadDB = "10.1.2.113/lf_prod";
+				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
+				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
+
+				transformator = new RFHarvesterCodeTransformator(transformationCode);
+
+				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+
+				downloader = new OAIDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
+			break;
+			case "4": //ONIX_DC
 				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
 				MySQLUploadDB = "10.1.2.113/lf_prod";
