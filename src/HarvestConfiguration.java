@@ -84,17 +84,42 @@ public class HarvestConfiguration
 		}
 		int collectionID = Integer.parseInt(this.collectionID);
 		int recomandedCommit = 1000;
+
+
+		UploadNoticesSolr5V2 SOLR5V2Uploader;
+
+		String MySQLUploadDB;
+		UploadControlsMySQL5V2 ControlsUploader;
+		UploadMetadatasMySQL5V2 MetadatasUploader;
+//		UploadPortfolioDatasMySQL5V2 PortfolioDatasUploader;
+//		UploadVolumesMySQL5V2 VolumesUploader;
+		UploadCollectionsMySQL5V2 CollectionsUploader;
+
 		switch(harvesterID)
 		{
 			case "1":
+				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+
+				MySQLUploadDB = "10.1.2.113/lf_prod";
+				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
+				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+//				PortfolioDatasUploader = new UploadPortfolioDatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+//				VolumesUploader = new UploadVolumesMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
+
+				transformator = new RFHarvesterCodeTransformator(transformationCode);
+
+				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+
+//				downloader = new PortfolioDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
 			break;
 			case "3":
-				UploadNoticesSolr5V2 SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
-				String MySQLUploadDB = "10.1.2.113/lf_prod";
-				UploadControlsMySQL5V2 ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
-				UploadMetadatasMySQL5V2 MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
-				UploadCollectionsMySQL5V2 CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
+				MySQLUploadDB = "10.1.2.113/lf_prod";
+				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
+				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
 
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
