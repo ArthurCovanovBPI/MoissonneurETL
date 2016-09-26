@@ -9,15 +9,15 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import OAI.OAIPage;
-import OAI.OAIRecord;
+import ONIX.ONIXPage;
+import ONIX.ONIXRecord;
 
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
 
-public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
+public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 {
 	private String URL;
 	private String URLADDITION;
@@ -27,7 +27,7 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 
 	private Proxy proxy;
 
-	public OAIDownloader(String URL, String URLADDITION, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader, String defaultDocumentType)
+	public ONIXDownloader(String URL, String URLADDITION, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader, String defaultDocumentType)
 	{
 		this.URL = URL;
 		this.URLADDITION = ((URLADDITION==null)? "" : URLADDITION);
@@ -40,7 +40,7 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 	@Override
 	public void download() throws RFHarvesterDownloaderV2ClassException
 	{
-		String link = URL + "?verb=ListRecords&metadataPrefix=oai_dc"+URLADDITION;
+		String link = URL + "?verb=ListRecords&metadataPrefix=onix_dc"+URLADDITION;
 		RFHarvesterLogger.debug(link);
 		URL url;
 
@@ -70,7 +70,7 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 			throw new RFHarvesterDownloaderV2ClassException(e);
 		}
 
-		OAIPage page = new OAIPage(xml);
+		ONIXPage page = new ONIXPage(xml);
 
 		String resumptionToken = page.getResuptionToken();
 		String prevResumptionToken = "";
@@ -82,20 +82,20 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 		int nb = page.getRecords().size();
 		int inserts = 0;
 
-		for(OAIRecord record : page.getRecords())
+		for(ONIXRecord record : page.getRecords())
 		{
 			try
 			{
 				HashMap<String, ArrayList<String>> transformation = transformator.transform(record.getMetadata().getValues());
 
 				ArrayList<String> ID = new ArrayList<String>();
-				ID.add(record.getHeader().getIdentifier().replaceAll("·", "."));
-				transformation.put("OAI_ID", ID);
+				ID.add(record.getHeader().getIdentifier().replaceAll("·", ".")); //TODO Delete this replaceAll
+				transformation.put("OAI_ID", ID); //TODO Make it a proper ONIX_ID value
 				if(defaultDocumentType != null)
 				{
-					ArrayList<String> OAIDefaultDocumentType = new ArrayList<String>();
-					OAIDefaultDocumentType.add(defaultDocumentType);
-					transformation.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
+					ArrayList<String> ONIXDefaultDocumentType = new ArrayList<String>();
+					ONIXDefaultDocumentType.add(defaultDocumentType);
+					transformation.put("ONIX_defaultDocumentType", ONIXDefaultDocumentType);
 				}
 				uploader.insertRow(transformation);
 				inserts++;
@@ -158,20 +158,20 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 
 			try
 			{
-				page = new OAIPage(xml);
-				for(OAIRecord record : page.getRecords())
+				page = new ONIXPage(xml);
+				for(ONIXRecord record : page.getRecords())
 				{
 					try
 					{
 						HashMap<String, ArrayList<String>> transformation = transformator.transform(record.getMetadata().getValues());
 						ArrayList<String> ID = new ArrayList<String>();
-						ID.add(record.getHeader().getIdentifier().replaceAll("·", "."));
-						transformation.put("OAI_ID", ID);
+						ID.add(record.getHeader().getIdentifier().replaceAll("·", ".")); //TODO Delete this replaceAll
+						transformation.put("OAI_ID", ID); //TODO Make it a proper ONIX_ID value
 						if(defaultDocumentType != null)
 						{
-							ArrayList<String> OAIDefaultDocumentType = new ArrayList<String>();
-							OAIDefaultDocumentType.add(defaultDocumentType);
-							transformation.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
+							ArrayList<String> ONIXDefaultDocumentType = new ArrayList<String>();
+							ONIXDefaultDocumentType.add(defaultDocumentType);
+							transformation.put("ONIX_defaultDocumentType", ONIXDefaultDocumentType);
 						}
 						uploader.insertRow(transformation);
 						inserts++;
