@@ -69,7 +69,6 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 			}
 			catch (SolrServerException | IOException e1)
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			System.exit(0); // Program won't run with uninitialized SOLR.
@@ -208,15 +207,14 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 				if(k.contains("solr"))
 					System.out.println(k + " - " + rows.get(k));
 			}
-			try
-			{
-				client.rollback();
-			}
-			catch (SolrServerException | IOException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//			try
+//			{
+//				client.rollback();
+//			}
+//			catch (SolrServerException | IOException e1)
+//			{
+//				e1.printStackTrace();
+//			}
 			System.exit(0);
 		}
 		notices.add(document);
@@ -250,7 +248,6 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 				}
 				catch (SolrServerException | IOException e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				System.exit(0); // Program won't run with uninitialized SOLR.
@@ -264,36 +261,12 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 		UpdateResponse responseAdding = null;
 		try
 		{
-//			long startTime = System.currentTimeMillis();
-//			solrnotices_new = new HttpSolrClient("http://10.1.2.140:8080/solr/notices_new");
-//			SolrQuery qt = new SolrQuery();
-//			qt.setParam("charset", "ISO-8859-1");
-////			System.out.println(qt.toNamedList());
-////			solrnotices_new.query(qt);
-//			
-//			UpdateRequest req = new UpdateRequest();
-//			System.out.println(req.getQueryParams());
-//			System.out.println(req.getParams());
-//			req.setQueryParams(qt.getParameterNames());
-//			req.setParam("charset", "ISO-8859-1");
-//			System.out.println(req.getQueryParams());
-//			System.out.println(req.getParams());
-//			req.setAction(UpdateRequest.ACTION.COMMIT, false, false);
-//			req.add(notices);
-//			
-//			System.out.println(ClientUtils.toQueryString(qt, false));
-//			UpdateResponse rsp = req.process(solrnotices_new);
-//			System.out.print ("Added documents to solr. Time taken = " + rsp.getElapsedTime() + ". " + rsp.toString());
-//			long endTime = System.currentTimeMillis();
-//			System.out.println (" , time-taken=" + ((double)(endTime-startTime))/1000.00 + " seconds");
-
 			if(notices.size()<=0)
 			{
 				RFHarvesterLogger.warning("Empty SOLR notices set");
 				return;
 			}
-//			responseAdding = solrnotices_new.add(notices);
-//			solrnotices_new.commit(true, true);
+
 			responseAdding = client.add(notices);
 //			client.commit(true, true);
 		}
@@ -336,7 +309,6 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 			}
 			catch (SolrServerException | IOException e1)
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
