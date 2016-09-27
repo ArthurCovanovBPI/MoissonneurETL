@@ -8,6 +8,7 @@ import java.util.HashMap;
 import rfharvester.ExitCodes;
 import rfharvester.RFHarvesterConfigurationClassException;
 import rfharvester.download.OAIDownloader;
+import rfharvester.download.ONIXDownloader;
 import rfharvester.download.RFHarvesterDownloaderInterfaceV2;
 import rfharvester.download.RFHarvesterDownloaderV2ClassException;
 import rfharvester.logger.RFHarvesterLogger;
@@ -139,7 +140,7 @@ public class HarvestConfiguration
 
 				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
 
-				downloader = new OAIDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
+				downloader = new ONIXDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
 			break;
 			default:
 				throw new RFHarvesterConfigurationClassException("Unsetted harvester " + harvesterID);

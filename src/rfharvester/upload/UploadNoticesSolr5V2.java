@@ -28,12 +28,6 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	private final String zookeeper3 = "10.1.2.107:2181";
 	private final List<String> zookeepers = Arrays.asList(zookeeper1, zookeeper2, zookeeper3);
 	CloudSolrClient client;
-//	CloudSolrClient client_new;
-//
-//	private final String SOLR1url = "http://10.1.2.216:8983/solr/";
-//	private final String SOLR2url = "http://10.1.2.218:8983/solr/";
-//	private SolrClient solr1core = null;
-//	private SolrClient solr2core = null;
 
 	private SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
@@ -70,22 +64,6 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 
 	private void initTable() throws RFHarvesterUploaderV2ClassException
 	{
-//		try
-//		{
-//			RFHarvesterLogger.debug("client_new.deleteByQuery(\"*:*\");");
-//			UpdateResponse SOLRresponse = client_new.deleteByQuery("*:*");
-//			RFHarvesterLogger.debug(SOLRresponse.toString());
-//			client_new.commit();
-////			RFHarvesterLogger.debug("client.deleteByQuery(\"*:*\");");
-////			SOLRresponse = client.deleteByQuery("*:*");
-////			RFHarvesterLogger.debug(SOLRresponse.toString());
-////			client.commit();
-//		}
-//		catch(SolrServerException | IOException e)
-//		{
-//			e.printStackTrace();
-//			System.exit(0); // Program won't run with uninitialized SOLR.
-//		}
 		try
 		{
 			RFHarvesterLogger.debug("client.deleteByQuery(\"collection_id:(" + collectionID + ")\");");
@@ -101,7 +79,6 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 			}
 			catch (SolrServerException | IOException e1)
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			System.exit(0); // Program won't run with uninitialized SOLR.
@@ -113,19 +90,9 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		RFHarvesterLogger.info("Initializing " + this.getClass().getName());
 		String zookeepersList = zookeepers.toString().substring(1, zookeepers.toString().length()-1).replaceAll(" ", "");
 
-		client = new CloudSolrClient(zookeepersList);//zookeepersList);
+		client = new CloudSolrClient(zookeepersList);
 		System.out.println("Connection with " + client.getZkHost() + " established");
 		client.setDefaultCollection("notices");
-
-//		client_new = new CloudSolrClient(zookeepersList);//zookeepersList);
-//		System.out.println("Connection with " + client_new.getZkHost() + " established");
-//		client_new.setDefaultCollection("notices_new");
-//
-//		solr1core = new HttpSolrClient(SOLR1url);
-//		RFHarvesterLogger.info("Connection with " + SOLR1url + " established");
-//
-//		solr2core = new HttpSolrClient(SOLR2url);
-//		RFHarvesterLogger.info("Connection with " + SOLR2url + " established");
 
 		this.collectionID = collectionID;
 		this.collectionName = collectionName;
@@ -254,7 +221,6 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	{
 		String out = null;
 
-//		System.out.println("InsertRow");
 		SolrInputDocument document = new SolrInputDocument();
 
 		document.addField("id", row.get("OAI_ID").get(0)+";"+collectionID);
@@ -325,10 +291,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 
 		if(row.containsKey("dates"))
 		{
-//			System.out.println("~~~~~~~~~~~~~~");
-//			System.out.println(row.get("dates").get(0));
 			String dateDocument = simpleDateParse(row.get("dates").get(0));
-//			System.out.println(dateDocument);
 			if(dateDocument != null)
 				document.addField("date_document", dateDocument);
 			if(collectionID == 5)
@@ -337,7 +300,6 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		else if(collectionID == 5)
 			document.setDocumentBoost(Integer.parseInt(row.get("solr_boost").get(0)));
 
-//		System.out.println(document.toString());
 		lastDocument = document;
 
 		notices.add(document);
@@ -392,7 +354,6 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 			}
 			catch (SolrServerException | IOException e1)
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

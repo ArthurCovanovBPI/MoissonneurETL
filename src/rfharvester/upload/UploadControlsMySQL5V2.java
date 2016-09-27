@@ -203,10 +203,6 @@ public class UploadControlsMySQL5V2 implements RFHarvesterUploaderV2Interface
 
 		try
 		{
-//			int type = ResultSet.TYPE_FORWARD_ONLY;
-//			int mode = ResultSet.CONCUR_READ_ONLY;
-			//uploadDBStatement = uploadDBConnection.createStatement(type, mode);
-
 			if(!row.containsKey("OAI_ID")||row.get("OAI_ID")==null)
 				throw new RFHarvesterUploaderV2ClassException("Missing key OAI_ID");
 			else
@@ -256,23 +252,17 @@ public class UploadControlsMySQL5V2 implements RFHarvesterUploaderV2Interface
 			}
 			catch(UnsupportedEncodingException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-//			RFHarvesterLogger.debug(query);
-//			uploadDBStatement.execute(query);
 			uploadDBStatement = uploadDBConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-//			int numero = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			uploadDBStatement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 
 			ResultSet rs = uploadDBStatement.getGeneratedKeys();
 			if (rs.next())
 			{
-//			    System.out.println(numero + " - " + rs.getString(1));
 			    out = rs.getString(1);
 			}
-//			System.out.println(out);
 			storedRows++;
 			if(storedRows >= recomandedCommit)
 				commit();
@@ -284,7 +274,7 @@ public class UploadControlsMySQL5V2 implements RFHarvesterUploaderV2Interface
 		}
 		catch(Exception e)
 		{
-			String errorMess = "";
+			String errorMess = "\n                                                 " + e.getMessage();
 			errorMess +=("\n                                                 #OAI_DC ~ " + ((row.containsKey("OAI_DC"))? row.get("OAI_DC").toString() : "FAILURE"));
 			errorMess +=("\n                                                 #titre ~ " + ((row.containsKey("titres"))? row.get("titres").toString() : "FAILURE"));
 			errorMess +=("\n                                                 #description ~ " + ((row.containsKey("descriptions"))? row.get("descriptions").toString() : "FAILURE"));
