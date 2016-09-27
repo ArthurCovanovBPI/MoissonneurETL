@@ -1316,11 +1316,6 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		// solr_date_end_new done
 		this.put("solr_commercial_number", this.get("commercial_number"));
 		this.put("solr_musical_kind", this.get("musical_kind"));
-		
-//		for(String K : this.keySet())
-//		{
-//			System.out.println(K + " - " + this.get(K));
-//		}
 	}
 }
 

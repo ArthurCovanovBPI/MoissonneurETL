@@ -95,7 +95,7 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 				{
 					ArrayList<String> ONIXDefaultDocumentType = new ArrayList<String>();
 					ONIXDefaultDocumentType.add(defaultDocumentType);
-					transformation.put("ONIX_defaultDocumentType", ONIXDefaultDocumentType);
+					transformation.put("OAI_defaultDocumentType", ONIXDefaultDocumentType); //TODO Make it a proper ONIX_defaultDocumentType value
 				}
 				uploader.insertRow(transformation);
 				inserts++;
@@ -171,7 +171,7 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 						{
 							ArrayList<String> ONIXDefaultDocumentType = new ArrayList<String>();
 							ONIXDefaultDocumentType.add(defaultDocumentType);
-							transformation.put("ONIX_defaultDocumentType", ONIXDefaultDocumentType);
+							transformation.put("OAI_defaultDocumentType", ONIXDefaultDocumentType); //TODO Make it a proper ONIX_defaultDocumentType value
 						}
 						uploader.insertRow(transformation);
 						inserts++;
