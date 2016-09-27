@@ -26,8 +26,8 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 	/*
 	 * You may think you know what the following code does.
 	 * But you don't. Trust me.
-	 * Fiddle with it, and youll spend many a sleepless
-	 * night cursing the moment you thought youd be clever
+	 * Fiddle with it, and you'll spend many a sleepless
+	 * night cursing the moment you thought you'd be clever
 	 * enough to "optimize" the code below.
 	 * Now close this file and go play with something else.
 	 */ 
@@ -112,15 +112,12 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 			String newdcformat = "";
 			for(String dcformatsplited : newdc)
 			{
-//				System.out.println("dcformatsplited : " + dcformatsplited);
 				newdcformat += (" ; " + dcformatsplited);
-//				System.out.println("newdcformat : " + newdcformat);
 			}
 			if(newdcformat.length() > 0)
 				newdcformat = newdcformat.substring(3);
 			return newdcformat;
 		}
-//		System.out.println("dcformat : " + dcformat);
 		return dcformat;
 	}
 
@@ -173,10 +170,9 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 	{
 		HashSet<String> lf_themes = new HashSet<String>();
 		final String THEME_SEPARATOR = " > ";
-//		System.out.println("themes : " + themes);
+
 		for(String theme : themes.split(" @;@ "))
 		{
-//			System.out.println("theme : '" + theme + "'");
 			theme = theme.trim();
 
 			String associatedLibelle = "";
@@ -529,12 +525,9 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		this.put("dm_launch", this.get("bpi_dm_launch")); //Don't remove bpi_dm_launch
 		String barcode_field = "";
 
-		//Calculate theme depending if notice comes from cdu or bdm
 		String theme = "";
-//		System.out.println("dm_launch : " + this.get("dm_launch"));
-		if(this.get("dm_launch") == null || this.get("dm_launch").length()<=0)
+		if(this.get("dm_launch") == null || this.get("dm_launch").length()<=0) //CDU
 		{
-//			System.out.println("Cdu");
 			theme = this.get("bpi_theme_lib");
 			if(theme.isEmpty() && (!this.get("bpi_indice").isEmpty()))
 			{
@@ -601,9 +594,8 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 
 
 			String bdm = bdms.get(0);
-			if((!this.get("bpi_theme").isEmpty())&&(!this.get("bpi_theme_lib").isEmpty()))
+			if((!this.get("bpi_theme").isEmpty())&&(!this.get("bpi_theme_lib").isEmpty())) //BDM
 			{
-//				System.out.println("Bdm");
 				try
 				{
 					theme = this.translateBdmThemes(this.get("bpi_theme"), this.get("bpi_theme_lib"), bdm, bdmThemesReferences, bdmThemesExclusions);
@@ -787,7 +779,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 
 //		System.out.println("dc_type : " + this.get("dc_type"));
 		String[] note = (this.get("dc_type").compareToIgnoreCase("CARTE") != 0 && !this.get("bpi_notes_ex").isEmpty()) ? this.get("bpi_notes_ex").split(" @;@ ") : null;
-//		System.out.println("note : " + note);
+
 		String[] call_num = (!this.get("bpi_cote").isEmpty()) ? this.get("bpi_cote").split(" @;@ ") : null;
 		String[] location = (!this.get("bpi_loca").isEmpty()) ? this.get("bpi_loca").split(" @;@ ") : null;
 		String[] label = (!this.get("bpi_dm_lien_lib").isEmpty()) ? this.get("bpi_dm_lien_lib").split(" @;@ ") : null;
@@ -1168,12 +1160,9 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 			}
 //			throw new RFHarvesterStorageClassException("Found a last volume match: " + this.get("dc_identifier") + " ~ " + this.get("title") + " ~ " + this.get("dm_launch"));
 		}
-		
-//		System.out.println("availability : " + this.get("availability"));
-//		SimpleDateFormat formater = new SimpleDateFormat("yyyyMMdd");
+
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
 		String harvesting_date = (document_date!=null && document_date.length()>0)? document_date : formater.format(new Date());
-		//harvesting_date += "T23:59:59Z";
 
 
 		String dispo_sur_poste = "";
@@ -1187,15 +1176,12 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		Pattern patternDispo = Pattern.compile("(disponible|bureau)", Pattern.CASE_INSENSITIVE);
 		for(HashMap<String, String> volume : volumes)
 		{
-//			System.out.println("volume : " + volume);
 			String volumeDispo=volume.get("dispo");
 			String volumeFormat=volume.get("format");
 			Matcher matcherOnShelf = patternOnShelf.matcher(volumeFormat);
 			Matcher matcherOnLine = patternOnLine.matcher(volumeFormat);
 			Matcher matcherDispo = patternDispo.matcher(volumeDispo);
-//			System.out.println("matcherOnShelf : " + matcherOnShelf.find());
-//			System.out.println("matcherOnLine : " + matcherOnLine.find());
-//			System.out.println("matcherDispo : " + matcherDispo.find());
+
 			matcherOnShelf.reset();
 			matcherOnLine.reset();
 			matcherDispo.reset();
@@ -1214,10 +1200,6 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 				dispo_access_libre = "onshelf";
 				dispo_avec_reservation = "onshelf";
 			}
-//			System.out.println("\tdispo_sur_poste : " + dispo_sur_poste);
-//			System.out.println("\tdispo_bibliotheque : " + dispo_bibliotheque);
-//			System.out.println("\tdispo_access_libre : " + dispo_access_libre);
-//			System.out.println("\tdispo_avec_reservation : " + dispo_avec_reservation);
 		}
 
 
