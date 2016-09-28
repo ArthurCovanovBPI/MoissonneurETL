@@ -395,9 +395,10 @@ public class MainClass
 						}
 						catch(Exception e)
 						{
-							RFHarvesterLogger.error("FATAL ERROR!!!" + RFHarvesterLogger.exceptionToString(e));
+							String exceptionMessage = RFHarvesterLogger.exceptionToString(e);
+							RFHarvesterLogger.error("FATAL ERROR!!!" + exceptionMessage);
 							RFHarvesterState.updateStatus("ERREUR!!!");
-							RFHarvesterState.updateMessage(e.getMessage());
+							RFHarvesterState.updateMessage(exceptionMessage.split("\n")[0]);
 							exitCode = ExitCodes.EX_SOFTWARE.value();
 						}
 					}

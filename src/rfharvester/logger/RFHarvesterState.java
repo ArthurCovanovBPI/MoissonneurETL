@@ -176,7 +176,10 @@ public abstract class RFHarvesterState
 
 	public static void updateMessage(String message)
 	{
-		executeQuery("UPDATE " + tableName + " SET message='" + message.replaceAll("'", "''").replaceAll("\\\\", "\\\\\\\\") + "' WHERE ID = " + ID);
+		if(message == null)
+			executeQuery("UPDATE " + tableName + " SET message='NULL MESSAGE' WHERE ID = " + ID);
+		else
+			executeQuery("UPDATE " + tableName + " SET message='" + message.replaceAll("'", "''").replaceAll("\\\\", "\\\\\\\\") + "' WHERE ID = " + ID);
 	}
 
 	public static void updateStatus(String status)
