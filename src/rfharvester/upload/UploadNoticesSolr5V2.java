@@ -123,7 +123,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		RFHarvesterLogger.debug("SOLR commit finished with status " + responseAdding.getStatus());// + " and last " + responseAdding.getQTime() + " milliseconds");
 	}
 
-	private String simpleDateParse(String date)
+	private Date simpleDateParse(String date) throws ParseException
 	{
 		if(date==null || date.isEmpty())
 			return null;
@@ -143,21 +143,10 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 			}
 			catch(ParseException eym)
 			{
-				try
-				{
-					result = y.parse(date);
-				}
-				catch(ParseException e)
-				{
-					RFHarvesterLogger.warning("Unable to parse in date format: " + date);
-					e.printStackTrace();
-				}
+				result = y.parse(date);
 			}
 		}
-		if(result==null)
-			return null;
-		else
-			return DF.format(result).toString();
+		return result;
 	}
 
 	private float dateBoost(String date)
@@ -291,11 +280,20 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 
 		if(row.containsKey("dates"))
 		{
-			String dateDocument = simpleDateParse(row.get("dates").get(0));
+			String dateDocument = null;
+			try
+			{
+				Date date = simpleDateParse(row.get("dates").get(0));
+				dateDocument = DF.format(date).toString();
+			}
+			catch (ParseException e)
+			{
+				RFHarvesterLogger.warning("Unable to parse in date format: " + row.get("dates").get(0) + " for " + row.get("OAI_ID").get(0) + " - " + row.get("titres") + RFHarvesterLogger.exceptionToString(e));
+			}
 			if(dateDocument != null)
 				document.addField("date_document", dateDocument);
-			if(collectionID == 5)
-				document.setDocumentBoost(dateBoost(dateDocument) + Integer.parseInt(row.get("solr_boost").get(0)));
+//			if(collectionID == 5)
+//				document.setDocumentBoost(dateBoost(dateDocument) + Integer.parseInt(row.get("solr_boost").get(0)));
 		}
 		else if(collectionID == 5)
 			document.setDocumentBoost(Integer.parseInt(row.get("solr_boost").get(0)));

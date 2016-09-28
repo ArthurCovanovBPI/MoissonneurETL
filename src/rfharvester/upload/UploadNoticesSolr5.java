@@ -290,14 +290,14 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 	{
 		try
 		{
-			RFHarvesterLogger.info("Commit Solr modifications");
-
-			client.commit();
-			RFHarvesterLogger.info("SOLR commited");
 
 			RFHarvesterLogger.info("Solr optimization");
 			client.optimize();
 			RFHarvesterLogger.info("SOLR optimized");
+
+			RFHarvesterLogger.info("Commit Solr modifications");
+			client.commit();
+			RFHarvesterLogger.info("SOLR commited");
 		}
 		catch(SolrServerException | IOException e)
 		{
