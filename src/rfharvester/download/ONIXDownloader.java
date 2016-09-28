@@ -116,7 +116,7 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 
 		int nullXML = 0;
 
-		while(!resumptionToken.isEmpty() && resumptionToken != null/* && nb < 1000*/)
+		while(resumptionToken != null && !resumptionToken.isEmpty())
 		{
 			try
 			{
