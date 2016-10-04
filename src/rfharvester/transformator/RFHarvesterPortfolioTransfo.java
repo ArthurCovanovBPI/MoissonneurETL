@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import rfharvester.RFHarvesterStorageClassException;
+import rfharvester.download.AuthoritiesDownloaderException;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.upload.RFHarvesterUploaderException;
 import rfharvester.upload.RFHarvesterUploaderInterface;
@@ -166,7 +166,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 	private static HashSet<String> nonmatchedCduThemes = new HashSet<>();	
 	private static HashSet<String> missingCduIndice = new HashSet<>();
 
-	private String translateCduThemes(String themes, HashMap<String, String> authorityindices, HashSet<Integer> refsourcesLengthsReferences, HashMap<String, String> cduThemesReferences, HashSet<Integer> refsourcesLengthsExclusions, HashMap<String, String> cduThemesExclusions) throws RFHarvesterStorageClassException
+	private String translateCduThemes(String themes, HashMap<String, String> authorityindices, HashSet<Integer> refsourcesLengthsReferences, HashMap<String, String> cduThemesReferences, HashSet<Integer> refsourcesLengthsExclusions, HashMap<String, String> cduThemesExclusions) throws AuthoritiesDownloaderException
 	{
 		HashSet<String> lf_themes = new HashSet<String>();
 		final String THEME_SEPARATOR = " > ";
@@ -267,7 +267,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 	
 	private static HashSet<String> nonmatchedBdmThemes = new HashSet<>();
 	
-	private String translateBdmThemes(String multi_themes, String multi_labels, String source, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesReferences, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesExclusions) throws RFHarvesterStorageClassException
+	private String translateBdmThemes(String multi_themes, String multi_labels, String source, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesReferences, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesExclusions) throws AuthoritiesDownloaderException
 	{
 		ArrayList<String> lf_themes = new ArrayList<String>();
 		String errorMessage = "";
@@ -284,10 +284,10 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		if(multiLabelsLength != multiThemesLength)
 			errorMessage += ("\n                                                 multiLabelsLength != multiThemesLength");
 		if(errorMessage.length()>0)
-			throw new RFHarvesterStorageClassException(errorMessage);
+			throw new AuthoritiesDownloaderException(errorMessage);
 
 		if(!bdmThemesReferences.containsKey(source))
-			throw new RFHarvesterStorageClassException("Missing source '" + source + "' in themes_references.");
+			throw new AuthoritiesDownloaderException("Missing source '" + source + "' in themes_references.");
 			
 		HashMap<String, HashMap<String, String>> bdmThemesReferencesSourced = bdmThemesReferences.get(source);
 		HashMap<String, HashMap<String, String>> bdmThemesExclusionsSourced = bdmThemesExclusions.get(source);
@@ -323,7 +323,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 				
 				int idx = (references.get("construction_mode").compareTo("F") == 0)? (j - 1) : j;
 				if(idx>labels.size())
-					throw new RFHarvesterStorageClassException("\n                                                 More idx (" + idx + ") than in labels: " + labels.toString());
+					throw new AuthoritiesDownloaderException("\n                                                 More idx (" + idx + ") than in labels: " + labels.toString());
 
 				String joinedLabels = "";
 				if(idx>=0)
@@ -360,7 +360,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 	}
 
 	// You don't understand? Me too :'(
-	public void transform(int collection_id, RFHarvesterUploaderInterface volumesInterface, HashMap<String, String> dateEndNew, HashMap<String, String> authorityindices, HashMap<String, String> documenttypes, HashMap<String, String> primarydocumenttypes, HashSet<Integer> refsourcesLengthsReferences, HashMap<String, String> cduThemesReferences, HashSet<Integer> refsourcesLengthsExclusions, HashMap<String, String> cduThemesExclusions, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesReferences, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesExclusions) throws RFHarvesterStorageClassException
+	public void transform(int collection_id, RFHarvesterUploaderInterface volumesInterface, HashMap<String, String> dateEndNew, HashMap<String, String> authorityindices, HashMap<String, String> documenttypes, HashMap<String, String> primarydocumenttypes, HashSet<Integer> refsourcesLengthsReferences, HashMap<String, String> cduThemesReferences, HashSet<Integer> refsourcesLengthsExclusions, HashMap<String, String> cduThemesExclusions, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesReferences, HashMap<String, HashMap<String, HashMap<String, String>>> bdmThemesExclusions) throws AuthoritiesDownloaderException
 	{
 		this.put("dc_title", normalizeTitle(this.get("dc_title")));
 		this.put("title", this.get("dc_title"));
@@ -535,7 +535,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 				{
 					theme = this.translateCduThemes(this.get("bpi_indice").replaceAll(";", "@;@"), authorityindices, refsourcesLengthsReferences, cduThemesReferences, refsourcesLengthsExclusions, cduThemesExclusions);
 				}
-				catch(RFHarvesterStorageClassException e)
+				catch(AuthoritiesDownloaderException e)
 				{
 					//throw new RFHarvesterStorageClassException("Can't translateCduThemes for " + this.get("dc_identifier") + " ~ " + this.get("title") + " ~ " + this.get("bpi_indice") + e.getMessage());
 					RFHarvesterLogger.warning("Can't translateCduThemes for " + this.get("dc_identifier") + " ~ " + this.get("title") + " ~ " + this.get("bpi_indice") + e.getMessage()); //TODO
@@ -600,9 +600,9 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 				{
 					theme = this.translateBdmThemes(this.get("bpi_theme"), this.get("bpi_theme_lib"), bdm, bdmThemesReferences, bdmThemesExclusions);
 					if(theme.isEmpty())
-						throw new RFHarvesterStorageClassException("EMPTY FINAL THEME");
+						throw new AuthoritiesDownloaderException("EMPTY FINAL THEME");
 				}
-				catch(RFHarvesterStorageClassException e)
+				catch(AuthoritiesDownloaderException e)
 				{
 //					throw new RFHarvesterStorageClassException("Can't translateBdmThemes for " + this.get("dc_identifier") + " ~ " + this.get("title") + " ~ " + this.get("bpi_theme") + " ~ " + this.get("bpi_theme_lib") + e.getMessage());
 					RFHarvesterLogger.warning("Can't translateBdmThemes for " + this.get("dc_identifier") + " ~ " + this.get("title") + " ~ " + this.get("bpi_theme") + " ~ " + this.get("bpi_theme_lib") + e.getMessage()); //TODO
@@ -624,7 +624,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 			err.add("\"" + this.get("bpi_dm_launch") + "\"");
 			if(this.get("bpi_dm_launch").length()<=0)
 			{
-				throw new RFHarvesterStorageClassException("Skipped bmd_info uniformisation : Missing bpi_dm_launch: " + err.toString());
+				throw new AuthoritiesDownloaderException("Skipped bmd_info uniformisation : Missing bpi_dm_launch: " + err.toString());
 			}
 			else
 			{
@@ -642,7 +642,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 						}
 					}
 					else
-						throw new RFHarvesterStorageClassException("Skipped bmd_info uniformisation : Invalid count ("+bpiDispoExLength+" bpi_dispo_ex, "+bpiDmLaunchLength +" bpi_dm_launch): " + err.toString());
+						throw new AuthoritiesDownloaderException("Skipped bmd_info uniformisation : Invalid count ("+bpiDispoExLength+" bpi_dispo_ex, "+bpiDmLaunchLength +" bpi_dm_launch): " + err.toString());
 				}
 				else if(bpiDispoExLength == bpiDmLaunchLength)
 				{
@@ -653,7 +653,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 					}
 				}
 				else
-					throw new RFHarvesterStorageClassException("Skipped bmd_info uniformisation : Invalid count ("+bpiDispoExLength+" bpi_dispo_ex, "+bpiDmLaunchLength +" bpi_dm_launch): " + err.toString());		
+					throw new AuthoritiesDownloaderException("Skipped bmd_info uniformisation : Invalid count ("+bpiDispoExLength+" bpi_dispo_ex, "+bpiDmLaunchLength +" bpi_dm_launch): " + err.toString());		
 			}
 		}
 

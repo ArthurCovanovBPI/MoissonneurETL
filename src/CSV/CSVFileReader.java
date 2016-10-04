@@ -1,10 +1,8 @@
 package CSV;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,21 +10,34 @@ public class CSVFileReader
 {
 	private String separator;
 
-	private FileInputStream fin;
-	private InputStreamReader isr;
+	private FileReader fr;
 	private BufferedReader br;
 
 	private String columns[];
 
 	private int line = 0;
+	private int lines = 0;
 
-	public CSVFileReader(String filePath, String separator) throws FileNotFoundException, IOException
+	public int getLine()
 	{
+		return line;
+	}
+
+	public int getLinesCount()
+	{
+		return lines;
+	}
+
+	public CSVFileReader(String filePath, String separator) throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+		while (reader.readLine() != null) lines++;
+		reader.close();
+
 		this.separator = separator;
 
-		this.fin = new FileInputStream(filePath);
-		this.isr = new InputStreamReader(fin);
-		this.br = new BufferedReader(isr);
+		this.fr = new FileReader(filePath);
+		this.br = new BufferedReader(fr);
 
 		line++;
 

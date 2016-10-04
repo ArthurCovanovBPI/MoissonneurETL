@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import rfharvester.RFHarvesterStorageClassException;
 import rfharvester.logger.RFHarvesterDatation;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
@@ -697,7 +696,7 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 //					}
 //					System.out.println("bbb");
 				}
-				catch(RFHarvesterStorageClassException e)
+				catch(AuthoritiesDownloaderException e)
 				{
 					transfoFailCount++;
 					RFHarvesterLogger.error(e.getMessage());

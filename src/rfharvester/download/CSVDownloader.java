@@ -1,15 +1,16 @@
 package rfharvester.download;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import CSV.CSVFileReader;
+import CSV.CSVFileReaderException;
 
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
+import rfharvester.upload.RFHarvesterUploaderV2Exception;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
 
 public class CSVDownloader implements RFHarvesterDownloaderInterfaceV2
@@ -32,78 +33,59 @@ public class CSVDownloader implements RFHarvesterDownloaderInterfaceV2
 	@Override
 	public void download() throws RFHarvesterDownloaderV2Exception
 	{
-		String link = filePath;
-		RFHarvesterLogger.debug(link);
-		URL url;
+		CSVFileReader csv;
 
-		int ptr = 0;
-		StringBuffer buffer = null;
-		URLConnection con = null;
-		InputStreamReader IS = null;
-		String xml = null;
 		try
 		{
-			url = new URL(link);
-			buffer = new StringBuffer();
 
-			IS = new InputStreamReader(con.getInputStream(), "UTF-8");
-
-			ptr = 0;
-			buffer = new StringBuffer();
-			while((ptr = IS.read()) != -1)
-				buffer.append((char) ptr);
-
-			RFHarvesterLogger.info("Connection  with " + link + " openned");
-			xml = buffer.toString();
+			csv = new CSVFileReader(filePath, CSVSeparator);
 		}
 		catch(IOException e)
 		{
 			throw new RFHarvesterDownloaderV2Exception(e);
 		}
 
-		OAIPage page = new OAIPage(xml);
-
-		String resumptionToken = page.getResuptionToken();
-		String prevResumptionToken = "";
-
-		long start = System.currentTimeMillis();
-		long startm = start;
-		long s = start;
-		int count = 0;
-		int nb = page.getRecords().size();
+		long s = System.currentTimeMillis();
+		int nb = csv.getLinesCount();
 		int inserts = 0;
 
-		for(OAIRecord record : page.getRecords())
+		HashMap<String, ArrayList<String>> transformation = null;
+		do
 		{
 			try
 			{
-				HashMap<String, ArrayList<String>> transformation = transformator.transform(record.getMetadata().getValues());
+				transformation = csv.nextLine();
 
-				ArrayList<String> ID = new ArrayList<String>();
-				ID.add(record.getHeader().getIdentifier().replaceAll("·", "."));
-				transformation.put("OAI_ID", ID);
+				transformation = transformator.transform(transformation); //Have to contain OAI_ID
 				if(defaultDocumentType != null)
 				{
 					ArrayList<String> OAIDefaultDocumentType = new ArrayList<String>();
 					OAIDefaultDocumentType.add(defaultDocumentType);
 					transformation.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
 				}
-				uploader.insertRow(transformation);
+
+				try
+				{
+					uploader.insertRow(transformation);
+				}
+				catch (RFHarvesterUploaderV2Exception e)
+				{
+					RFHarvesterLogger.warning("Unable to insert line " + csv.getLine() + "(" + transformation + ")" + RFHarvesterLogger.exceptionToString(e));
+				}
 				inserts++;
+
+				if(csv.getLine() % 100 == 0)
+					RFHarvesterLogger.info(csv.getLine() + "/" + nb + " lines parsed");
 			}
-			catch(Exception e)
+			catch (CSVFileReaderException e)
 			{
-				RFHarvesterLogger.error("Unable to insert record: " + record.getXML() + RFHarvesterLogger.exceptionToString(e));
-				e.printStackTrace();
+				RFHarvesterLogger.warning("Unable to parse CSV line " + csv.getLine() + RFHarvesterLogger.exceptionToString(e));
 			}
-		}
+
+		}while(transformation != null);
 
 		RFHarvesterState.updateHarvestedDocuments(inserts);
 
-		if(page.getCursor()==null)
-			RFHarvesterLogger.info(count + page.getRecords().size() + "/" + page.getCompleteListSize() + " - previousTokens/nextToken : " + prevResumptionToken + " / " + resumptionToken);
-		else
-			RFHarvesterLogger.info(Integer.parseInt(page.getCursor()) + page.getRecords().size() + "/" + page.getCompleteListSize() + " - previousTokens/nextToken : " + prevResumptionToken + " / " + resumptionToken);
 
 		long e = System.currentTimeMillis();
 		RFHarvesterLogger.info(nb + " records parsed");

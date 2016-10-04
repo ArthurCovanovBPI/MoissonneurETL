@@ -6,7 +6,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 import rfharvester.ExitCodes;
-import rfharvester.RFHarvesterConfigurationException;
 import rfharvester.download.CSVDownloader;
 import rfharvester.download.OAIDownloader;
 import rfharvester.download.ONIXDownloader;
@@ -33,7 +32,7 @@ public class HarvestConfiguration
 
 	private String downloadURL;
 	private String downloadURLADDITION;
-	private String pathway;
+	private String filePath;
 	private String CSVSeparator;
 	private String harvesterID;
 	private String collectionID;
@@ -78,7 +77,7 @@ public class HarvestConfiguration
 		disponibilite.put("dispo_broadcast_group", "");
 	}
 
-	public void prepareProgram() throws RFHarvesterConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
+	public void prepareProgram() throws HarvestConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
 	{
 		if(RFHarvesterState.checkRunningStatus() != 1)
 		{
@@ -157,14 +156,14 @@ public class HarvestConfiguration
 
 				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
 
-				downloader = new CSVDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);
+				downloader = new CSVDownloader(filePath, CSVSeparator, transformator, uploader, defaultDocumentType);
 			break;
 			default:
-				throw new RFHarvesterConfigurationException("Unsetted harvester " + harvesterID);
+				throw new HarvestConfigurationException("Unsetted harvester " + harvesterID);
 		}
 	}
 
-	public void loadConfiguration(int ID) throws RFHarvesterConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
+	public void loadConfiguration(int ID) throws HarvestConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
 	{
 		RFHarvesterLogger.info("Loading configuration " + ID);
 		int type = ResultSet.TYPE_FORWARD_ONLY;
@@ -180,12 +179,12 @@ public class HarvestConfiguration
 		{
 			if((++i) != 1) //If COUNT(*) ResultSet's size !=1 then error
 			{
-				throw new RFHarvesterConfigurationException("Line " + Thread.currentThread().getStackTrace()[1].getLineNumber() + " : " + i + " results in SELECT COUNT(*) ResutlSet");
+				throw new HarvestConfigurationException("Line " + Thread.currentThread().getStackTrace()[1].getLineNumber() + " : " + i + " results in SELECT COUNT(*) ResutlSet");
 			}
 
 			downloadURL = rs.getString("URL");
 			downloadURLADDITION = rs.getString("URLADDITION");
-			pathway = rs.getString("filepath");
+			filePath = rs.getString("filepath");
 			CSVSeparator = rs.getString("csv_separator");
 
 			harvesterID = rs.getString("harvester_ID");
@@ -207,7 +206,7 @@ public class HarvestConfiguration
 		rs.close();
 		if(i <= 0)
 		{
-			throw new RFHarvesterConfigurationException("Configuration ID(" + ID + ") not found!!!");
+			throw new HarvestConfigurationException("Configuration ID(" + ID + ") not found!!!");
 		}
 
 		prepareProgram();

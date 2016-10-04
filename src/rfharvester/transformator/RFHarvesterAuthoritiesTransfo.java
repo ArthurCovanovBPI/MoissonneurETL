@@ -2,7 +2,7 @@ package rfharvester.transformator;
 
 import java.util.HashMap;
 
-import rfharvester.RFHarvesterStorageClassException;
+import rfharvester.download.AuthoritiesDownloaderException;
 
 /**
  * BPI Harvester storage class. All classes, that implement
@@ -14,7 +14,7 @@ public final class RFHarvesterAuthoritiesTransfo extends HashMap<String, String>
 {
 	private static final long serialVersionUID = -5220477509918877309L;
 	
-	public void transform() throws RFHarvesterStorageClassException
+	public void transform() throws AuthoritiesDownloaderException
 	{
 //		ExecutorService es = Executors.newCachedThreadPool();
 //

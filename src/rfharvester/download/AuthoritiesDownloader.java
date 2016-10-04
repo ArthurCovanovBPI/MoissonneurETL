@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import rfharvester.RFHarvesterStorageClassException;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.transformator.RFHarvesterAuthoritiesTransfo;
 import rfharvester.upload.RFHarvesterUploaderException;
@@ -337,7 +336,7 @@ public class AuthoritiesDownloader implements RFHarvesterDownloaderInterface
 						System.exit(0);
 					}
 				}
-				catch(RFHarvesterStorageClassException e)
+				catch(AuthoritiesDownloaderException e)
 				{
 					transfoFailCount++;
 					RFHarvesterLogger.error(e.getMessage());
