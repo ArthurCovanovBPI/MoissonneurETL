@@ -42,7 +42,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 		}
 	}
 
-	public String insertRow(final HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2ClassException
+	public String insertRow(final HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2Exception
 	{
 		String out = null;
 		String in = null;
@@ -79,7 +79,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 				}
 			}
 		}
-		catch(RFHarvesterUploaderV2ClassException e)
+		catch(RFHarvesterUploaderV2Exception e)
 		{
 			for(RFHarvesterUploaderV2Interface s : success)
 			{
@@ -91,7 +91,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 		return out;
 	}
 
-	public void end() throws RFHarvesterUploaderV2ClassException
+	public void end() throws RFHarvesterUploaderV2Exception
 	{
 		if(uploaders != null)
 		{

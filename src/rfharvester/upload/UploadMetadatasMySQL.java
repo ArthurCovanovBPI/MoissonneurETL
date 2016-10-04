@@ -181,7 +181,7 @@ public class UploadMetadatasMySQL implements RFHarvesterUploaderInterface
 	}
 
 	@Override
-	public void insertRow(final HashMap<String, String> rows) throws RFHarvesterUploadClassException
+	public void insertRow(final HashMap<String, String> rows) throws RFHarvesterUploaderException
 	{
 		String query = "";
 		Statement uploadDBStatement = null;
@@ -205,7 +205,7 @@ public class UploadMetadatasMySQL implements RFHarvesterUploaderInterface
 						if(!rows.containsKey(C))
 							missingSet += ("'" + C + "', ");
 					missingSet = missingSet.substring(0, missingSet.length()-2);
-					throw new RFHarvesterUploadClassException("Error set:    "+ keySet + "]\n                                        Missing keys: " + missingSet);// + "\n                                        " + query);
+					throw new RFHarvesterUploaderException("Error set:    "+ keySet + "]\n                                        Missing keys: " + missingSet);// + "\n                                        " + query);
 				}
 				String column = rows.get(S);
 				if(column == null)
@@ -222,11 +222,11 @@ public class UploadMetadatasMySQL implements RFHarvesterUploaderInterface
 		}
 		catch(SQLException e)
 		{
-			throw new RFHarvesterUploadClassException("Unable to insert: [" + values + "]\n                                        " + e.getClass().getName() + ": " + e.getMessage());// + "\n                                        " + query);
+			throw new RFHarvesterUploaderException("Unable to insert: [" + values + "]\n                                        " + e.getClass().getName() + ": " + e.getMessage());// + "\n                                        " + query);
 		}
-		catch(RFHarvesterUploadClassException e)
+		catch(RFHarvesterUploaderException e)
 		{
-			throw new RFHarvesterUploadClassException(e);
+			throw new RFHarvesterUploaderException(e);
 		}
 		catch(Exception e)
 		{
@@ -243,7 +243,7 @@ public class UploadMetadatasMySQL implements RFHarvesterUploaderInterface
 				}
 			}
 
-			throw new RFHarvesterUploadClassException("FATAL ERROR!!!" + errorMess);
+			throw new RFHarvesterUploaderException("FATAL ERROR!!!" + errorMess);
 		}
 		finally
 		{

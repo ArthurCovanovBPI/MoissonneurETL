@@ -14,7 +14,7 @@ public interface RFHarvesterUploaderInterface
 	public void initTable();
 	public void copyIntoOld();
 	public void begin();
-	public void insertRow(final HashMap<String, String> rows) throws RFHarvesterUploadClassException;
+	public void insertRow(final HashMap<String, String> rows) throws RFHarvesterUploaderException;
 	public void storeErrorIdentifier(String dc_identifier);
 	public void cleanErrors();
 	public void commit();

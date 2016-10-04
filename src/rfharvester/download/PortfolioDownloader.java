@@ -18,7 +18,7 @@ import rfharvester.logger.RFHarvesterDatation;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterPortfolioTransfo;
-import rfharvester.upload.RFHarvesterUploadClassException;
+import rfharvester.upload.RFHarvesterUploaderException;
 import rfharvester.upload.RFHarvesterUploaderInterface;
 
 public class PortfolioDownloader implements RFHarvesterDownloaderInterface
@@ -670,7 +670,7 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 									revertUploadsList.add(Upload);
 //									System.out.println("revertUploadsList : " + revertUploadsList.size());
 								}
-								catch(RFHarvesterUploadClassException e)
+								catch(RFHarvesterUploaderException e)
 								{
 									int errorTransaction = finalUploadErrors.get(upClassName) + 1;
 									finalUploadErrors.put(upClassName, errorTransaction);

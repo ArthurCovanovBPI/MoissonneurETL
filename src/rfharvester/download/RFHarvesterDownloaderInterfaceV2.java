@@ -5,5 +5,5 @@ package rfharvester.download;
  */
 public interface RFHarvesterDownloaderInterfaceV2
 {
-	public void download() throws RFHarvesterDownloaderV2ClassException;
+	public void download() throws RFHarvesterDownloaderV2Exception;
 }

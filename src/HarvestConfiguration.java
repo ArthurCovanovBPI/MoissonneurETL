@@ -6,17 +6,18 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 import rfharvester.ExitCodes;
-import rfharvester.RFHarvesterConfigurationClassException;
+import rfharvester.RFHarvesterConfigurationException;
+import rfharvester.download.CSVDownloader;
 import rfharvester.download.OAIDownloader;
 import rfharvester.download.ONIXDownloader;
 import rfharvester.download.RFHarvesterDownloaderInterfaceV2;
-import rfharvester.download.RFHarvesterDownloaderV2ClassException;
+import rfharvester.download.RFHarvesterDownloaderV2Exception;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterCodeTransformator;
 import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
 import rfharvester.upload.RFHarvesterUploaderV2Bundle;
-import rfharvester.upload.RFHarvesterUploaderV2ClassException;
+import rfharvester.upload.RFHarvesterUploaderV2Exception;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
 import rfharvester.upload.UploadCollectionsMySQL5V2;
 import rfharvester.upload.UploadControlsMySQL5V2;
@@ -32,6 +33,8 @@ public class HarvestConfiguration
 
 	private String downloadURL;
 	private String downloadURLADDITION;
+	private String pathway;
+	private String CSVSeparator;
 	private String harvesterID;
 	private String collectionID;
 	private String collectionName;
@@ -75,7 +78,7 @@ public class HarvestConfiguration
 		disponibilite.put("dispo_broadcast_group", "");
 	}
 
-	public void prepareProgram() throws RFHarvesterConfigurationClassException, RFHarvesterUploaderV2ClassException, SQLException, ClassNotFoundException
+	public void prepareProgram() throws RFHarvesterConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
 	{
 		if(RFHarvesterState.checkRunningStatus() != 1)
 		{
@@ -142,19 +145,33 @@ public class HarvestConfiguration
 
 				downloader = new ONIXDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
 			break;
+			case "5": //CSV
+				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+
+				MySQLUploadDB = "10.1.2.113/lf_prod";
+				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
+				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
+
+				transformator = new RFHarvesterCodeTransformator(transformationCode);
+
+				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+
+				downloader = new CSVDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);
+			break;
 			default:
-				throw new RFHarvesterConfigurationClassException("Unsetted harvester " + harvesterID);
+				throw new RFHarvesterConfigurationException("Unsetted harvester " + harvesterID);
 		}
 	}
 
-	public void loadConfiguration(int ID) throws RFHarvesterConfigurationClassException, RFHarvesterUploaderV2ClassException, SQLException, ClassNotFoundException
+	public void loadConfiguration(int ID) throws RFHarvesterConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
 	{
 		RFHarvesterLogger.info("Loading configuration " + ID);
 		int type = ResultSet.TYPE_FORWARD_ONLY;
 		int mode = ResultSet.CONCUR_READ_ONLY;
 		Statement DBStatement = null;
 		DBStatement = DBConnection.createStatement(type, mode);
-		String query = "SELECT configuration.ID, configuration.harvester_ID, configuration.collection_ID, configuration.name, configuration.URL, configuration.URLADDITION, configuration.dispo_sur_poste, configuration.dispo_bibliotheque, configuration.dispo_access_libre, configuration.dispo_avec_reservation, configuration.dispo_avec_access_autorise, configuration.dispo_broadcast_group, document_type.type, transformation.code FROM configuration INNER JOIN transformation ON configuration.transformation_ID = transformation.ID INNER JOIN document_type ON configuration.default_document_type_ID = document_type.ID WHERE configuration.ID = " + ID;
+		String query = "SELECT configuration.ID, configuration.harvester_ID, configuration.collection_ID, configuration.name, configuration.URL, configuration.URLADDITION, configuration.filepath, configuration.csv_separator, configuration.dispo_sur_poste, configuration.dispo_bibliotheque, configuration.dispo_access_libre, configuration.dispo_avec_reservation, configuration.dispo_avec_access_autorise, configuration.dispo_broadcast_group, document_type.type, transformation.code FROM configuration INNER JOIN transformation ON configuration.transformation_ID = transformation.ID INNER JOIN document_type ON configuration.default_document_type_ID = document_type.ID WHERE configuration.ID = " + ID;
 		RFHarvesterLogger.debug(query);
 		ResultSet rs = DBStatement.executeQuery(query);
 		int i = 0;
@@ -163,11 +180,13 @@ public class HarvestConfiguration
 		{
 			if((++i) != 1) //If COUNT(*) ResultSet's size !=1 then error
 			{
-				throw new RFHarvesterConfigurationClassException("Line " + Thread.currentThread().getStackTrace()[1].getLineNumber() + " : " + i + " results in SELECT COUNT(*) ResutlSet");
+				throw new RFHarvesterConfigurationException("Line " + Thread.currentThread().getStackTrace()[1].getLineNumber() + " : " + i + " results in SELECT COUNT(*) ResutlSet");
 			}
 
 			downloadURL = rs.getString("URL");
 			downloadURLADDITION = rs.getString("URLADDITION");
+			pathway = rs.getString("filepath");
+			CSVSeparator = rs.getString("csv_separator");
 
 			harvesterID = rs.getString("harvester_ID");
 			collectionID = rs.getString("collection_ID");
@@ -188,13 +207,13 @@ public class HarvestConfiguration
 		rs.close();
 		if(i <= 0)
 		{
-			throw new RFHarvesterConfigurationClassException("Configuration ID(" + ID + ") not found!!!");
+			throw new RFHarvesterConfigurationException("Configuration ID(" + ID + ") not found!!!");
 		}
 
 		prepareProgram();
 	}
 
-	public void run() throws RFHarvesterDownloaderV2ClassException, RFHarvesterUploaderV2ClassException
+	public void run() throws RFHarvesterDownloaderV2Exception, RFHarvesterUploaderV2Exception
 	{
 		downloader.download();
 		uploader.end();

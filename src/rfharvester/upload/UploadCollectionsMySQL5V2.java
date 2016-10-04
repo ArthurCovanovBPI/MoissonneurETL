@@ -71,7 +71,7 @@ public class UploadCollectionsMySQL5V2 implements RFHarvesterUploaderV2Interface
 	}
 
 	@Override
-	public String insertRow(HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2ClassException
+	public String insertRow(HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2Exception
 	{
 		storedRows++;
 		return ""+storedRows;
@@ -84,7 +84,7 @@ public class UploadCollectionsMySQL5V2 implements RFHarvesterUploaderV2Interface
 	}
 
 	@Override
-	public void end() throws RFHarvesterUploaderV2ClassException
+	public void end() throws RFHarvesterUploaderV2Exception
 	{
 		try
 		{
@@ -93,7 +93,7 @@ public class UploadCollectionsMySQL5V2 implements RFHarvesterUploaderV2Interface
 		}
 		catch(SQLException e)
 		{
-			throw new RFHarvesterUploaderV2ClassException(e);
+			throw new RFHarvesterUploaderV2Exception(e);
 		}
 	}
 

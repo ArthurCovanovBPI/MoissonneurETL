@@ -122,7 +122,7 @@ public class UploadCollectionsMySQL implements RFHarvesterUploaderInterface
 	}
 
 	@Override
-	public void insertRow(final HashMap<String, String> rows) throws RFHarvesterUploadClassException
+	public void insertRow(final HashMap<String, String> rows) throws RFHarvesterUploaderException
 	{
 		storedRows++;
 	}

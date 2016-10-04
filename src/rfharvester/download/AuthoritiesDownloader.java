@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import rfharvester.RFHarvesterStorageClassException;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.transformator.RFHarvesterAuthoritiesTransfo;
-import rfharvester.upload.RFHarvesterUploadClassException;
+import rfharvester.upload.RFHarvesterUploaderException;
 import rfharvester.upload.RFHarvesterUploaderInterface;
 
 public class AuthoritiesDownloader implements RFHarvesterDownloaderInterface
@@ -316,7 +316,7 @@ public class AuthoritiesDownloader implements RFHarvesterDownloaderInterface
 										Upload.begin();
 									}
 								}
-								catch(RFHarvesterUploadClassException e)
+								catch(RFHarvesterUploaderException e)
 								{
 									int errorTransaction = finalUploadErrors.get(upClassName) + 1;
 									finalUploadErrors.put(upClassName, errorTransaction);

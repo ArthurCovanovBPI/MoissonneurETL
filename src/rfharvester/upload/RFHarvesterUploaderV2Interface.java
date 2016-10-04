@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 public interface RFHarvesterUploaderV2Interface
 {
-	public String insertRow(final HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2ClassException;
-	public void end() throws RFHarvesterUploaderV2ClassException;
+	public String insertRow(final HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2Exception;
+	public void end() throws RFHarvesterUploaderV2Exception;
 	public void dropLast();
 }

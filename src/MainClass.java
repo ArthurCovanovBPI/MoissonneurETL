@@ -11,15 +11,15 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.output.TeeOutputStream;
 
 import rfharvester.ExitCodes;
-import rfharvester.RFHarvesterConfigurationClassException;
+import rfharvester.RFHarvesterConfigurationException;
 import rfharvester.download.PortfolioDownloader;
 import rfharvester.download.RFHarvesterDownloaderInterface;
-import rfharvester.download.RFHarvesterDownloaderV2ClassException;
+import rfharvester.download.RFHarvesterDownloaderV2Exception;
 import rfharvester.logger.RFHarvesterDatation;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.upload.RFHarvesterUploaderInterface;
-import rfharvester.upload.RFHarvesterUploaderV2ClassException;
+import rfharvester.upload.RFHarvesterUploaderV2Exception;
 import rfharvester.upload.UploadAuthoritiesSolr;
 import rfharvester.upload.UploadCollectionsMySQL;
 import rfharvester.upload.UploadControlsMySQL;
@@ -252,7 +252,7 @@ public class MainClass
 		authoritiesSOLRUploader.replaceOldTable();
 	}
 
-	private void runConfiguration(String configurationIDString) throws SQLException, ClassNotFoundException, RFHarvesterConfigurationClassException, RFHarvesterDownloaderV2ClassException, RFHarvesterUploaderV2ClassException
+	private void runConfiguration(String configurationIDString) throws SQLException, ClassNotFoundException, RFHarvesterConfigurationException, RFHarvesterDownloaderV2Exception, RFHarvesterUploaderV2Exception
 	{
 		RFHarvesterLogger.info("Running configuration: "+configurationIDString);
 		try

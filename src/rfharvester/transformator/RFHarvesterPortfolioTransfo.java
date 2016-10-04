@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import rfharvester.RFHarvesterStorageClassException;
 import rfharvester.logger.RFHarvesterLogger;
-import rfharvester.upload.RFHarvesterUploadClassException;
+import rfharvester.upload.RFHarvesterUploaderException;
 import rfharvester.upload.RFHarvesterUploaderInterface;
 
 /**
@@ -930,7 +930,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 					if(volumesInterface!=null)
 						volumesInterface.insertRow(this);
 				}
-				catch(RFHarvesterUploadClassException e)
+				catch(RFHarvesterUploaderException e)
 				{
 					RFHarvesterLogger.error(e.getMessage());
 					e.printStackTrace();
@@ -1033,7 +1033,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 					if(volumesInterface!=null)
 						volumesInterface.insertRow(this);
 				}
-				catch(RFHarvesterUploadClassException e)
+				catch(RFHarvesterUploaderException e)
 				{
 					RFHarvesterLogger.error(e.getMessage());
 					e.printStackTrace();
@@ -1151,7 +1151,7 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 					if(volumesInterface!=null)
 						volumesInterface.insertRow(this);
 				}
-				catch(RFHarvesterUploadClassException e)
+				catch(RFHarvesterUploaderException e)
 				{
 					RFHarvesterLogger.error(e.getMessage());
 					e.printStackTrace();

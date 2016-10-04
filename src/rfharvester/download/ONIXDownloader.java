@@ -38,7 +38,7 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 	}
 
 	@Override
-	public void download() throws RFHarvesterDownloaderV2ClassException
+	public void download() throws RFHarvesterDownloaderV2Exception
 	{
 		String link = URL + "?verb=ListRecords&metadataPrefix=onix_dc"+URLADDITION;
 		RFHarvesterLogger.debug(link);
@@ -67,7 +67,7 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 		}
 		catch(IOException e)
 		{
-			throw new RFHarvesterDownloaderV2ClassException(e);
+			throw new RFHarvesterDownloaderV2Exception(e);
 		}
 
 		ONIXPage page = new ONIXPage(xml);
@@ -139,7 +139,7 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 					long endTime = System.currentTimeMillis();
 					RFHarvesterLogger.info("Total duration: " + ((endTime - s) / 1000) + " secs : " + prevResumptionToken + " - " + resumptionToken);
 					RFHarvesterLogger.info(nb + " records parsed");
-					throw new RFHarvesterDownloaderV2ClassException(e);
+					throw new RFHarvesterDownloaderV2Exception(e);
 				}
 				RFHarvesterLogger.warning(nullXML + " : NULL XML FOR TOKEN " + resumptionToken);
 				continue;
@@ -150,7 +150,7 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 				nullXML++;
 				if(nullXML>10)
 				{
-					throw new RFHarvesterDownloaderV2ClassException("More thant 10 attempts for resumptionToken : " + resumptionToken);
+					throw new RFHarvesterDownloaderV2Exception("More thant 10 attempts for resumptionToken : " + resumptionToken);
 				}
 				RFHarvesterLogger.warning(nullXML + " : NULL XML FOR TOKEN " + resumptionToken + "!!!");
 				continue;

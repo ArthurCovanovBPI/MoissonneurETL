@@ -62,7 +62,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		lastDocument = null;
 	}
 
-	private void initTable() throws RFHarvesterUploaderV2ClassException
+	private void initTable() throws RFHarvesterUploaderV2Exception
 	{
 		try
 		{
@@ -85,7 +85,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		}
 	}
 
-	public UploadNoticesSolr5V2(int recomandedCommit, int collectionID, String collectionName, HashMap<String, String> disponibilite) throws RFHarvesterUploaderV2ClassException
+	public UploadNoticesSolr5V2(int recomandedCommit, int collectionID, String collectionName, HashMap<String, String> disponibilite) throws RFHarvesterUploaderV2Exception
 	{
 		RFHarvesterLogger.info("Initializing " + this.getClass().getName());
 		String zookeepersList = zookeepers.toString().substring(1, zookeepers.toString().length()-1).replaceAll(" ", "");
@@ -206,7 +206,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	}
 
 	@Override
-	public String insertRow(HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2ClassException
+	public String insertRow(HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2Exception
 	{
 		String out = null;
 
@@ -218,18 +218,18 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		if(row.containsKey("controlID") && row.get("controlID")!=null)
 			document.addField("controls_id", row.get("controlID").get(0));
 		else
-			throw new RFHarvesterUploaderV2ClassException("Missing collectionID in "+ row.toString());
+			throw new RFHarvesterUploaderV2Exception("Missing collectionID in "+ row.toString());
 
 		ArrayList<String> titles = new ArrayList<String>();
 		if(row.containsKey("titres"))
 			titles.addAll(row.get("titres"));
 		else
-			throw new RFHarvesterUploaderV2ClassException("Missing key titres");
+			throw new RFHarvesterUploaderV2Exception("Missing key titres");
 		if(row.containsKey("relations"))
 			titles.addAll(row.get("relations"));
 		String titleString = RFHarvesterUtilities.arrayListToString(titles, "; ");
 		if(titleString == null)
-			throw new RFHarvesterUploaderV2ClassException("Missing titles in " + row);
+			throw new RFHarvesterUploaderV2Exception("Missing titles in " + row);
 		document.addField("title", titleString);
 		document.addField("title_sort", normalizeTitleSort(titleString));
 
@@ -316,7 +316,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		errors.add(dc_identifier + ";" + collectionID);
 	}
 
-	public void cleanErrors() throws RFHarvesterUploaderV2ClassException
+	public void cleanErrors() throws RFHarvesterUploaderV2Exception
 	{
 		for(String error : errors)
 		{
@@ -328,12 +328,12 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 			}
 			catch(SolrServerException | IOException e)
 			{
-				throw new RFHarvesterUploaderV2ClassException(e); // Program won't run with uninitialized SOLR.
+				throw new RFHarvesterUploaderV2Exception(e); // Program won't run with uninitialized SOLR.
 			}
 		}
 	}
 
-	public void replaceOldTable() throws RFHarvesterUploaderV2ClassException
+	public void replaceOldTable() throws RFHarvesterUploaderV2Exception
 	{
 		try
 		{
@@ -358,7 +358,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	}
 
 	@Override
-	public void end() throws RFHarvesterUploaderV2ClassException
+	public void end() throws RFHarvesterUploaderV2Exception
 	{
 		commit();
 		replaceOldTable();

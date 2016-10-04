@@ -173,7 +173,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 	}
 
 	@Override
-	public String insertRow(HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2ClassException
+	public String insertRow(HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2Exception
 	{
 		String out = null;
 
@@ -184,7 +184,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 		}
 		catch(SQLException e)
 		{
-			throw new RFHarvesterUploaderV2ClassException(e);
+			throw new RFHarvesterUploaderV2Exception(e);
 		}
 
 		String query = "";
@@ -228,12 +228,12 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 			if(row.containsKey("OAI_ID")&&row.get("OAI_ID")!=null)
 				dc_identifier = "'" + row.get("OAI_ID").get(0).replaceAll("'", "''") + "'";
 			else
-				throw new RFHarvesterUploaderV2ClassException("Missing key OAI_ID");
+				throw new RFHarvesterUploaderV2Exception("Missing key OAI_ID");
 
 			if(row.containsKey("controlID") && row.get("controlID")!=null)
 				controls_id = row.get("controlID").get(0);
 			else
-				throw new RFHarvesterUploaderV2ClassException("Missing controlID in "+ row.toString());
+				throw new RFHarvesterUploaderV2Exception("Missing controlID in "+ row.toString());
 
 			dc_title = (((dc_title!=null))? ("'" + dc_title.replaceAll("'", "''") + "'") : "NULL");
 			dc_creator = (((dc_creator!=null))? ("'" + dc_creator.replaceAll("'", "''") + "'") : "NULL");
@@ -322,7 +322,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 		}
 		catch(SQLException e)
 		{
-			throw new RFHarvesterUploaderV2ClassException("Unable to insert: [" + values + "]\n                                                 Into " + tableName + "\n                                                 " + e.getClass().getName() + ": " + e.getMessage());// + "\n                                        " + query);
+			throw new RFHarvesterUploaderV2Exception("Unable to insert: [" + values + "]\n                                                 Into " + tableName + "\n                                                 " + e.getClass().getName() + ": " + e.getMessage());// + "\n                                        " + query);
 		}
 		catch(Exception e)
 		{
@@ -331,7 +331,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 			errorMess +=("\n                                                 #titre ~ " + ((row.containsKey("titre"))? row.get("titre").toString() : "FAILURE"));
 			errorMess +=("\n                                                 #description ~ " + ((row.containsKey("description"))? row.get("description").toString() : "FAILURE"));
 
-			throw new RFHarvesterUploaderV2ClassException("FATAL ERROR!!!" + errorMess);
+			throw new RFHarvesterUploaderV2Exception("FATAL ERROR!!!" + errorMess);
 		}
 		finally
 		{
@@ -350,7 +350,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 	}
 
 	@Override
-	public void end() throws RFHarvesterUploaderV2ClassException
+	public void end() throws RFHarvesterUploaderV2Exception
 	{
 		try
 		{
@@ -359,7 +359,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 		}
 		catch(SQLException e)
 		{
-			throw new RFHarvesterUploaderV2ClassException(e);
+			throw new RFHarvesterUploaderV2Exception(e);
 		}
 	}
 
