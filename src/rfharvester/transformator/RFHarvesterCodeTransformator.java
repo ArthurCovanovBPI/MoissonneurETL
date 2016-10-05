@@ -36,7 +36,7 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 			}
 			else if(matcherLine.group(7)!=""&&matcherLine.group(7)!=null)
 			{
-				ArrayList<String[]> T2 = ((transformationsType3.containsKey(G1))? transformationsType2.get(G1) : new ArrayList<String[]>());
+				ArrayList<String[]> T2 = ((transformationsType2.containsKey(G1))? transformationsType2.get(G1) : new ArrayList<String[]>());
 				String Type2[] = new String[2];
 				Type2[0] = G7;
 				Type2[1] = G8;
@@ -45,7 +45,7 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 			}
 			else
 			{
-				ArrayList<String> T1 = ((transformationsType3.containsKey(G1))? transformationsType3.get(G1) : new ArrayList<String>());
+				ArrayList<String> T1 = ((transformationsType1.containsKey(G1))? transformationsType1.get(G1) : new ArrayList<String>());
 				T1.add(G8);
 				transformationsType1.put(G1, T1);
 			}
@@ -106,8 +106,12 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 					}
 				}
 			}
+//			System.out.println("+"+replacement);
 			if(replacement==null)
 				return null;
+//			replacement = replacement.replaceAll("\\", "\\\\");
+			replacement = replacement.replaceAll("\\$", "\\\\\\$");
+//			System.out.println("-"+replacement);
 			resultLine=matcherVariable.replaceFirst(replacement);
 			matcherVariable = patternVariable.matcher(resultLine);
 		}
@@ -166,11 +170,18 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 
 		for(String K : transformationsType1.keySet())
 		{
-			for(String T1 : transformationsType3.get(K))
+			for(String T1 : transformationsType1.get(K))
 			{
+//				System.out.println(K + "<= "+T1);
 				ArrayList<String> Insertion = transformatorType1(T1, source);
 				if(Insertion!=null)
+				{
+					if(destination.containsKey(K))
+						Insertion.addAll(destination.get(K));
 					destination.put(K, Insertion);
+				}
+//				if(Insertion!=null)
+//					destination.put(K, Insertion);
 			}
 		}
 
@@ -180,7 +191,13 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 			{
 				ArrayList<String> Insertion = transformatorType2(T2, source);
 				if(Insertion!=null)
+				{
+					if(destination.containsKey(K))
+						Insertion.addAll(destination.get(K));
 					destination.put(K, Insertion);
+				}
+//				if(Insertion!=null)
+//					destination.put(K, Insertion);
 			}
 		}
 
@@ -190,7 +207,13 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 			{
 				ArrayList<String> Insertion = transformatorType3(T3, source);
 				if(Insertion!=null)
+				{
+					if(destination.containsKey(K))
+						Insertion.addAll(destination.get(K));
 					destination.put(K, Insertion);
+				}
+//				if(Insertion!=null)
+//					destination.put(K, Insertion);
 			}
 		}
 

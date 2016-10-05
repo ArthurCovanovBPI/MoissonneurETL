@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import CSV.CSVFileReader;
-import CSV.CSVFileReaderException;
+import CSV.CSVReaderException;
 
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
@@ -13,7 +13,7 @@ import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
 import rfharvester.upload.RFHarvesterUploaderV2Exception;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
 
-public class CSVDownloader implements RFHarvesterDownloaderInterfaceV2
+public class CSVFileDownloader implements RFHarvesterDownloaderInterfaceV2
 {
 	private String filePath;
 	private String CSVSeparator;
@@ -21,7 +21,7 @@ public class CSVDownloader implements RFHarvesterDownloaderInterfaceV2
 	private RFHarvesterTransformatorInterfaceV2 transformator;
 	private RFHarvesterUploaderV2Interface uploader;
 
-	public CSVDownloader(String filePath, String CSVSeparator, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader, String defaultDocumentType)
+	public CSVFileDownloader(String filePath, String CSVSeparator, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader, String defaultDocumentType)
 	{
 		this.filePath = filePath;
 		this.CSVSeparator = CSVSeparator;
@@ -37,7 +37,6 @@ public class CSVDownloader implements RFHarvesterDownloaderInterfaceV2
 
 		try
 		{
-
 			csv = new CSVFileReader(filePath, CSVSeparator);
 		}
 		catch(IOException e)
@@ -56,7 +55,9 @@ public class CSVDownloader implements RFHarvesterDownloaderInterfaceV2
 			{
 				transformation = csv.nextLine();
 
+//				System.out.println("#" + transformation);
 				transformation = transformator.transform(transformation); //Have to contain OAI_ID
+//				System.out.println("~" + transformation);
 				if(defaultDocumentType != null)
 				{
 					ArrayList<String> OAIDefaultDocumentType = new ArrayList<String>();
@@ -77,12 +78,13 @@ public class CSVDownloader implements RFHarvesterDownloaderInterfaceV2
 				if(csv.getLine() % 100 == 0)
 					RFHarvesterLogger.info(csv.getLine() + "/" + nb + " lines parsed");
 			}
-			catch (CSVFileReaderException e)
+			catch (CSVReaderException e)
 			{
 				RFHarvesterLogger.warning("Unable to parse CSV line " + csv.getLine() + RFHarvesterLogger.exceptionToString(e));
+				continue;
 			}
 
-		}while(transformation != null);
+		}while(csv.getLine() < nb);
 
 		RFHarvesterState.updateHarvestedDocuments(inserts);
 

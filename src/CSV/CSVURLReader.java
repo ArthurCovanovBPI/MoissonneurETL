@@ -1,16 +1,17 @@
 package CSV;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CSVFileReader
+public class CSVURLReader
 {
 	private String separator;
 
-	private FileReader fr;
 	private BufferedReader br;
 
 	private String columns[];
@@ -28,22 +29,32 @@ public class CSVFileReader
 		return lines;
 	}
 
-	public CSVFileReader(String filePath, String separator) throws IOException
+	public CSVURLReader(String downloadURL, String separator) throws IOException
 	{
-		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+//		System.out.println(downloadURL);
+        URL website = new URL(downloadURL);
+        URLConnection connection = website.openConnection();
+//		System.out.println(downloadURL);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
 		while (reader.readLine() != null) lines++;
 		reader.close();
 
 		this.separator = separator;
 
-		this.fr = new FileReader(filePath);
-		this.br = new BufferedReader(fr);
+        connection = website.openConnection();
+		this.br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 		line++;
-
+	
 		String firstLine = br.readLine();
 
 		this.columns = firstLine.split(separator);
+//		while(line<156000)
+//		{
+//			line++;
+//			br.readLine();
+//		}
 	}
 
 	public HashMap<String, ArrayList<String>> nextLine() throws CSVReaderException

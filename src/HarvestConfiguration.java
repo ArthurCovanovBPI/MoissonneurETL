@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 import rfharvester.ExitCodes;
-import rfharvester.download.CSVDownloader;
+import rfharvester.download.CSVURLDownloader;
 import rfharvester.download.OAIDownloader;
 import rfharvester.download.ONIXDownloader;
 import rfharvester.download.RFHarvesterDownloaderInterfaceV2;
@@ -15,6 +15,7 @@ import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterCodeTransformator;
 import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
+import rfharvester.upload.RFHarvesterNullUploader;
 import rfharvester.upload.RFHarvesterUploaderV2Bundle;
 import rfharvester.upload.RFHarvesterUploaderV2Exception;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
@@ -145,18 +146,11 @@ public class HarvestConfiguration
 				downloader = new ONIXDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
 			break;
 			case "5": //CSV
-				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
-
-				MySQLUploadDB = "10.1.2.113/lf_prod";
-				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
-				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
-				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
-
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
-				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+				uploader = new RFHarvesterNullUploader();
 
-				downloader = new CSVDownloader(filePath, CSVSeparator, transformator, uploader, defaultDocumentType);
+				downloader = new CSVURLDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);
 			break;
 			default:
 				throw new HarvestConfigurationException("Unsetted harvester " + harvesterID);
