@@ -55,7 +55,7 @@ public class CSVURLDownloader implements RFHarvesterDownloaderInterfaceV2
 			{
 				transformation = csv.nextLine();
 
-				System.out.println("#" + transformation);
+//				System.out.println("#" + transformation);
 				transformation = transformator.transform(transformation); //Have to contain OAI_ID
 				if(defaultDocumentType != null)
 				{
@@ -63,7 +63,7 @@ public class CSVURLDownloader implements RFHarvesterDownloaderInterfaceV2
 					OAIDefaultDocumentType.add(defaultDocumentType);
 					transformation.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
 				}
-				System.out.println("~" + transformation);
+//				System.out.println("~" + transformation);
 
 				try
 				{
@@ -81,7 +81,7 @@ public class CSVURLDownloader implements RFHarvesterDownloaderInterfaceV2
 			catch (CSVReaderException e)
 			{
 				RFHarvesterLogger.warning("Unable to parse CSV line " + csv.getLine() + RFHarvesterLogger.exceptionToString(e));
-				continue;
+//				continue;
 			}
 
 		}while(csv.getLine() < nb);

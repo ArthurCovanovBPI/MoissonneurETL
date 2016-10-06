@@ -127,9 +127,10 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	{
 		if(date==null || date.isEmpty())
 			return null;
-		SimpleDateFormat ymd = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat ym  = new SimpleDateFormat("yyyyMM");
-		SimpleDateFormat y   = new SimpleDateFormat("yyyy");
+		date += "T01:00:00Z";
+		SimpleDateFormat ymd = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss'Z'");
+		SimpleDateFormat ym  = new SimpleDateFormat("yyyyMM'T'HH:mm:ss'Z'");
+		SimpleDateFormat y   = new SimpleDateFormat("yyyy'T'HH:mm:ss'Z'");
 		Date result=null;
 		try
 		{

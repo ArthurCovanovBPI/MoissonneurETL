@@ -46,7 +46,7 @@ public class CSVURLReader
 		this.br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 		line++;
-	
+
 		String firstLine = br.readLine();
 
 		this.columns = firstLine.split(separator);
