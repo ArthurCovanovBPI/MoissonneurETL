@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,7 +35,11 @@ public class CSVURLReader
 //		System.out.println(downloadURL);
         URL website = new URL(downloadURL);
         URLConnection connection = website.openConnection();
+//		connection.setRequestProperty("Accept-Charset", "UTF-8");
+//		connection.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
+//		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36");
 //		System.out.println(downloadURL);
+    	
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 		while (reader.readLine() != null) lines++;
@@ -69,6 +74,7 @@ public class CSVURLReader
 		try
 		{
 			nextLine = br.readLine();
+//			System.out.println("+"+nextLine);
 			values = nextLine.split(separator);
 //			System.out.println(values.length + " : " + Arrays.toString(values));
 		}

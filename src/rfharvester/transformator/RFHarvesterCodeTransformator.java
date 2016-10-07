@@ -66,6 +66,7 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 	private String transformLine(String line, HashMap<String, ArrayList<String>> source, int i)
 	{
 		String resultLine = new String(line);
+//		System.out.println("resultLine: " + resultLine);
 
 		Matcher matcherVariable = patternVariable.matcher(resultLine);
 		while(matcherVariable.find())
@@ -106,13 +107,14 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 					}
 				}
 			}
-//			System.out.println("+"+replacement);
+//			System.out.println("\t+"+replacement);
 			if(replacement==null)
 				return null;
-//			replacement = replacement.replaceAll("\\", "\\\\");
+			replacement = replacement.replaceAll("\\\\", "\\\\\\\\");
 			replacement = replacement.replaceAll("\\$", "\\\\\\$");
 //			System.out.println("-"+replacement);
 			resultLine=matcherVariable.replaceFirst(replacement);
+//			System.out.println("resultLine: " + resultLine);
 			matcherVariable = patternVariable.matcher(resultLine);
 		}
 

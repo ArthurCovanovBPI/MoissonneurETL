@@ -15,6 +15,7 @@ import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterCodeTransformator;
 import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
+import rfharvester.upload.RFHarvesterNullUploader;
 import rfharvester.upload.RFHarvesterUploaderV2Bundle;
 import rfharvester.upload.RFHarvesterUploaderV2Exception;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
@@ -155,6 +156,7 @@ public class HarvestConfiguration
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
 				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+//				uploader = new RFHarvesterNullUploader();
 
 				downloader = new CSVURLDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);
 			break;
