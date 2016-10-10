@@ -66,19 +66,19 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 	private String transformLine(String line, HashMap<String, ArrayList<String>> source, int i)
 	{
 		String resultLine = new String(line);
-//		System.out.println("resultLine: " + resultLine);
+		System.out.println("resultLine: " + resultLine);
 
 		Matcher matcherVariable = patternVariable.matcher(resultLine);
-//		System.out.println("matcherVariable.find(): "+matcherVariable.find());
 		while(matcherVariable.find())
 		{
 			String m1 = matcherVariable.group(1);
 			String m3 = matcherVariable.group(3);
 			String m4 = matcherVariable.group(4);
-//			System.out.println("m1: "+m1);
+			System.out.println("m1: "+m1);
 			if(!source.containsKey(m1))
 			{
-				resultLine=null;
+//				resultLine=null;
+				resultLine=matcherVariable.replaceFirst(""); //TODO Determine if we should reject a line without data or just set data to nothing
 				break;
 			}
 
@@ -109,14 +109,14 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 					}
 				}
 			}
-//			System.out.println("\t+"+replacement);
+			System.out.println("\t+"+replacement);
 			if(replacement==null)
 				return null;
 			replacement = replacement.replaceAll("\\\\", "\\\\\\\\");
 			replacement = replacement.replaceAll("\\$", "\\\\\\$");
-//			System.out.println("-"+replacement);
+			System.out.println("-"+replacement);
 			resultLine=matcherVariable.replaceFirst(replacement);
-//			System.out.println("resultLine: " + resultLine);
+			System.out.println("resultLine: " + resultLine);
 			matcherVariable = patternVariable.matcher(resultLine);
 		}
 
@@ -176,7 +176,7 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 		{
 			for(String T1 : transformationsType1.get(K))
 			{
-//				System.out.println(K + "<= "+T1);
+				System.out.println(K + "<= "+T1);
 				ArrayList<String> Insertion = transformatorType1(T1, source);
 				if(Insertion!=null)
 				{
