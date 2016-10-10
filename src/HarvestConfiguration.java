@@ -15,7 +15,6 @@ import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterCodeTransformator;
 import rfharvester.transformator.RFHarvesterTransformatorInterfaceV2;
-import rfharvester.upload.RFHarvesterNullUploader;
 import rfharvester.upload.RFHarvesterUploaderV2Bundle;
 import rfharvester.upload.RFHarvesterUploaderV2Exception;
 import rfharvester.upload.RFHarvesterUploaderV2Interface;
@@ -33,7 +32,6 @@ public class HarvestConfiguration
 
 	private String downloadURL;
 	private String downloadURLADDITION;
-	private String filePath;
 	private String CSVSeparator;
 	private String harvesterID;
 	private String collectionID;
@@ -173,7 +171,7 @@ public class HarvestConfiguration
 		int mode = ResultSet.CONCUR_READ_ONLY;
 		Statement DBStatement = null;
 		DBStatement = DBConnection.createStatement(type, mode);
-		String query = "SELECT configuration.ID, configuration.harvester_ID, configuration.collection_ID, configuration.name, configuration.URL, configuration.URLADDITION, configuration.filepath, configuration.csv_separator, configuration.dispo_sur_poste, configuration.dispo_bibliotheque, configuration.dispo_access_libre, configuration.dispo_avec_reservation, configuration.dispo_avec_access_autorise, configuration.dispo_broadcast_group, document_type.type, transformation.code FROM configuration INNER JOIN transformation ON configuration.transformation_ID = transformation.ID INNER JOIN document_type ON configuration.default_document_type_ID = document_type.ID WHERE configuration.ID = " + ID;
+		String query = "SELECT configuration.ID, configuration.harvester_ID, configuration.collection_ID, configuration.name, configuration.URL, configuration.URLADDITION, configuration.csv_separator, configuration.dispo_sur_poste, configuration.dispo_bibliotheque, configuration.dispo_access_libre, configuration.dispo_avec_reservation, configuration.dispo_avec_access_autorise, configuration.dispo_broadcast_group, document_type.type, transformation.code FROM configuration INNER JOIN transformation ON configuration.transformation_ID = transformation.ID INNER JOIN document_type ON configuration.default_document_type_ID = document_type.ID WHERE configuration.ID = " + ID;
 		RFHarvesterLogger.debug(query);
 		ResultSet rs = DBStatement.executeQuery(query);
 		int i = 0;
@@ -187,7 +185,6 @@ public class HarvestConfiguration
 
 			downloadURL = rs.getString("URL");
 			downloadURLADDITION = rs.getString("URLADDITION");
-			filePath = rs.getString("filepath");
 			CSVSeparator = rs.getString("csv_separator");
 
 			harvesterID = rs.getString("harvester_ID");

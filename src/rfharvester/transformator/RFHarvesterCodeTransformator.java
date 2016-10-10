@@ -66,19 +66,20 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 	private String transformLine(String line, HashMap<String, ArrayList<String>> source, int i)
 	{
 		String resultLine = new String(line);
-//		System.out.println("resultLine: " + resultLine);
 
 		Matcher matcherVariable = patternVariable.matcher(resultLine);
 		while(matcherVariable.find())
 		{
+//			System.out.println("resultLine: " + resultLine);
 			String m1 = matcherVariable.group(1);
 			String m3 = matcherVariable.group(3);
 			String m4 = matcherVariable.group(4);
-			System.out.println("m1: "+m1);
+//			System.out.println("m1: "+m1);
 			if(!source.containsKey(m1))
 			{
 //				resultLine=null;
 				resultLine=matcherVariable.replaceFirst(""); //TODO Determine if we should reject a line without data or just set data to nothing
+				matcherVariable = patternVariable.matcher(resultLine);
 				continue;
 			}
 
