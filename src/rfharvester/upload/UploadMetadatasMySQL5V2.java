@@ -199,6 +199,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 		String dc_title = RFHarvesterUtilities.arrayListToString(row.get("titres"), "; ");
 		String dc_creator = RFHarvesterUtilities.arrayListToString(row.get("auteurs"), "; ");
 		String dc_subject = RFHarvesterUtilities.arrayListToString(row.get("sujets"), "; ");
+		System.out.println("dc_subject: " + dc_subject);
 		String dc_description = RFHarvesterUtilities.arrayListToString(row.get("descriptions"), "; ");
 		String dc_publisher = RFHarvesterUtilities.arrayListToString(row.get("editeurs"), "; ");
 		String dc_contributor = RFHarvesterUtilities.arrayListToString(row.get("contributeurs"), "; ");
@@ -301,9 +302,10 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 			}
 			catch(UnsupportedEncodingException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RFHarvesterUploaderV2Exception(e);
 			}
+
+			System.out.println(query);
 
 //			RFHarvesterLogger.debug(query);
 			uploadDBStatement = uploadDBConnection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

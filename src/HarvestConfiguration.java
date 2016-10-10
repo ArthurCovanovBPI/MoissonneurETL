@@ -156,6 +156,7 @@ public class HarvestConfiguration
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
 				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+//				uploader = new RFHarvesterUploaderV2Bundle(ControlsUploader, MetadatasUploader, CollectionsUploader);
 //				uploader = new RFHarvesterNullUploader();
 
 				downloader = new CSVURLDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);

@@ -10,7 +10,7 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 	private String regexLine = "(\\S+?)[\t ]*(<(((()|\\[(\\S+)\\])=[\\t ]*(\\S.*)))|<(.+)>)";
 	private Pattern patternLine = Pattern.compile(regexLine);
 
-	private String regexVariable = "\\$_\\((\\S+)\\)(\\[(.*?)\\]|\\{([0-9]+|i)\\})?";
+	private String regexVariable = "\\$_\\((\\S+?)\\)(\\[(.*?)\\]|\\{([0-9]+|i)\\})?";
 	private Pattern patternVariable = Pattern.compile(regexVariable, Pattern.DOTALL);
 
 	String code = "";
@@ -69,11 +69,13 @@ public class RFHarvesterCodeTransformator implements RFHarvesterTransformatorInt
 //		System.out.println("resultLine: " + resultLine);
 
 		Matcher matcherVariable = patternVariable.matcher(resultLine);
+//		System.out.println("matcherVariable.find(): "+matcherVariable.find());
 		while(matcherVariable.find())
 		{
 			String m1 = matcherVariable.group(1);
 			String m3 = matcherVariable.group(3);
 			String m4 = matcherVariable.group(4);
+//			System.out.println("m1: "+m1);
 			if(!source.containsKey(m1))
 			{
 				resultLine=null;
