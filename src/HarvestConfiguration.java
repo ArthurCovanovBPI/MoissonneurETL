@@ -146,18 +146,18 @@ public class HarvestConfiguration
 				downloader = new ONIXDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
 			break;
 			case "5": //CSV
-//				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
-//
-//				MySQLUploadDB = "10.1.2.113/lf_prod";
-//				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
-//				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
-//				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
+				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+
+				MySQLUploadDB = "10.1.2.113/lf_prod";
+				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
+				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
+				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
 
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
-//				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
 //				uploader = new RFHarvesterUploaderV2Bundle(ControlsUploader, MetadatasUploader, CollectionsUploader);
-				uploader = new RFHarvesterNullUploader();
+//				uploader = new RFHarvesterNullUploader();
 
 				downloader = new CSVURLDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);
 			break;
