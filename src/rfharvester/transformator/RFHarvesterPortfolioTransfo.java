@@ -393,6 +393,9 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		dcAudioTypes.add("EPARLE");
 		dcAudioTypes.add("LIVREAUDIO");
 //		System.out.println("dc_format : " + this.get("dc_format"));
+
+		this.put("custom_document_type", normalizeTitle(this.get("dc_type")));
+
 		if(dcAudioTypes.contains(this.get("dc_type").toUpperCase()))
 		{
 //			System.out.println("aa");
@@ -1246,7 +1249,8 @@ public final class RFHarvesterPortfolioTransfo extends HashMap<String, String>
 		this.put("solr_autocomplete_description", this.get("dc_description"));
 		this.put("solr_barcode", barcode_field);
 		this.put("solr_indice", this.get("bpi_indice"));
-		this.put("solr_custom_document_type", this.get("dc_type"));
+//		this.put("solr_custom_document_type", this.get("dc_type"));
+		this.put("solr_custom_document_type", this.get("custom_document_type"));
 		this.put("solr_title_sort", this.get("title"));
 		this.put("solr_lang_exact", this.get("dc_language"));
 		this.put("dcdate", this.get("dcdate").replaceAll("[^\\d]", ""));

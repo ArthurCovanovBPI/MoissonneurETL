@@ -248,7 +248,7 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 			dc_source = (((dc_source!=null))? ("'" + dc_source.replaceAll("'", "''") + "'") : "NULL");
 			dc_relation = (((dc_relation!=null))? ("'" + dc_relation.replaceAll("'", "''") + "'") : "''");
 			dc_coverage = (((dc_coverage!=null))? ("'" + dc_coverage.replaceAll("'", "''") + "'") : "''");
-			dc_rights = (((dc_rights!=null))? ("'" + dc_rights.replaceAll("'", "''") + "'") : "NULL");
+			dc_rights = (((dc_rights!=null))? ("'" + dc_rights.replaceAll("'", "''") + "'") : "''");
 			dc_language = (((dc_language!=null))? ("'" + dc_language.replaceAll("'", "''") + "'") : "NULL");
 			osu_thumbnail = (((osu_thumbnail!=null))? ("'" + osu_thumbnail.replaceAll("'", "''") + "'") : "NULL");
 
