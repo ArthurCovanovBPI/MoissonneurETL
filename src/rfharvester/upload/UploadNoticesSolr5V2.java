@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.utils.RFHarvesterUtilities;
@@ -127,7 +128,8 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	{
 		if(date==null || date.isEmpty())
 			return null;
-		date += "T01:00:00Z";
+		date = date.replaceAll("[^\\d]", "");
+		date += "T23:00:00Z";
 		SimpleDateFormat ymd = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss'Z'");
 		SimpleDateFormat ym  = new SimpleDateFormat("yyyyMM'T'HH:mm:ss'Z'");
 		SimpleDateFormat y   = new SimpleDateFormat("yyyy'T'HH:mm:ss'Z'");
@@ -154,9 +156,9 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	{
 		if(date==null)
 			return 0.000001f;
-		SimpleDateFormat ymd = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat ym  = new SimpleDateFormat("yyyyMM");
-		SimpleDateFormat y   = new SimpleDateFormat("yyyy");
+		SimpleDateFormat ymd = new SimpleDateFormat("yyyyMMdd", Locale.FRANCE);
+		SimpleDateFormat ym  = new SimpleDateFormat("yyyyMM", Locale.FRANCE);
+		SimpleDateFormat y   = new SimpleDateFormat("yyyy", Locale.FRANCE);
 		Date result=null;
 		try
 		{
