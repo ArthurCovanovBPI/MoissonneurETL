@@ -292,6 +292,14 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 			catch (ParseException e)
 			{
 				RFHarvesterLogger.warning("Unable to parse in date format: " + row.get("dates").get(0) + " for " + row.get("OAI_ID").get(0) + " - " + row.get("titres") + RFHarvesterLogger.exceptionToString(e));
+				try
+				{
+					document.addField("date_document", simpleDateParse("1000-01-01T23:59:59Z"));
+				}
+				catch (ParseException e1)
+				{
+					RFHarvesterLogger.warning("Unable to parse in date format: 1000-01-01T23:59:59Z for " + row.get("OAI_ID").get(0) + " - " + row.get("titres") + RFHarvesterLogger.exceptionToString(e1));
+				}
 			}
 			if(dateDocument != null)
 				document.addField("date_document", dateDocument);
