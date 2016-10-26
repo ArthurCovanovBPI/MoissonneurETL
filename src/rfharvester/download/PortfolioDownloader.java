@@ -30,9 +30,9 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 	private Connection localSqliteConnection = null;
 	private Connection uploadDBConnection = null;
 	private final String className = this.getClass().getName();
-	private final String uploadDB = "jdbc:mysql://10.1.2.113/lf_prod";
-	private final String uploadDBlogin = "root";
-	private final String uploadDBpassword = "mysqlbpi";
+	private final String uploadDB = "jdbc:mysql://10.1.2.108/lf_prod";
+	private final String uploadDBlogin = "harvester";
+	private final String uploadDBpassword = "harvester";
 	private final String harvestDB = "jdbc:postgresql://10.1.2.8:5432/portfoliodw";
 	private final String harvestDBlogin = "rechfed";
 	private final String harvestDBpassword = "EpbHI18jXk";

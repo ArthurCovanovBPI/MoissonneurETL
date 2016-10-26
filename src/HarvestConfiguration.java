@@ -102,7 +102,7 @@ public class HarvestConfiguration
 			case "1": //Portfolio
 				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
-				MySQLUploadDB = "10.1.2.113/lf_prod";
+				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
 				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
 //				PortfolioDatasUploader = new UploadPortfolioDatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
@@ -118,7 +118,7 @@ public class HarvestConfiguration
 			case "3": //OAI_DC
 				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
-				MySQLUploadDB = "10.1.2.113/lf_prod";
+				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
 				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
 				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
@@ -132,7 +132,7 @@ public class HarvestConfiguration
 			case "4": //ONIX_DC
 				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
-				MySQLUploadDB = "10.1.2.113/lf_prod";
+				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
 				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
 				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);
@@ -146,7 +146,7 @@ public class HarvestConfiguration
 			case "5": //CSV
 				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
-				MySQLUploadDB = "10.1.2.113/lf_prod";
+				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
 				MetadatasUploader = new UploadMetadatasMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID);
 				CollectionsUploader = new UploadCollectionsMySQL5V2(MySQLUploadDB, collectionID);

@@ -12,9 +12,9 @@ import rfharvester.logger.RFHarvesterLogger;
 public class UploadCollectionsMySQL implements RFHarvesterUploaderInterface
 {
 //	private final String uploadDB = "jdbc:mysql://10.1.2.140/lf_prod?characterEncoding=ISO-8859-1";
-	private final String uploadDB = "jdbc:mysql://10.1.2.113/lf_prod?characterEncoding=ISO-8859-1&autoReconnect=true";
-	private final String uploadDBlogin = "root";
-	private final String uploadDBpassword = "mysqlbpi";
+	private final String uploadDB = "jdbc:mysql://10.1.2.108/lf_prod?characterEncoding=ISO-8859-1&autoReconnect=true";
+	private final String uploadDBlogin = "harvester";
+	private final String uploadDBpassword = "harvester";
 	private final String tableName = "collections";
 	private Connection uploadDBConnection = null;
 

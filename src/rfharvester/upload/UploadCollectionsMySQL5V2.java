@@ -13,8 +13,8 @@ import rfharvester.logger.RFHarvesterLogger;
 public class UploadCollectionsMySQL5V2 implements RFHarvesterUploaderV2Interface
 {
 	private final String uploadDB;
-	private final String uploadDBlogin = "root";
-	private final String uploadDBpassword = "mysqlbpi";
+	private final String uploadDBlogin = "harvester";
+	private final String uploadDBpassword = "harvester";
 	private final String tableName = "collections";
 	private Connection uploadDBConnection = null;
 
