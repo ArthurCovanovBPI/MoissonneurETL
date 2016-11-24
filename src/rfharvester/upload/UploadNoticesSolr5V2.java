@@ -17,8 +17,12 @@ import java.util.Locale;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.utils.RFHarvesterUtilities;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.CoreAdminRequest;
+import org.apache.solr.client.solrj.response.CoreAdminResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 
@@ -29,6 +33,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	private final String zookeeper3 = "10.1.2.107:2181";
 	private final List<String> zookeepers = Arrays.asList(zookeeper1, zookeeper2, zookeeper3);
 	CloudSolrClient client;
+	CloudSolrClient client_new;
 
 	private SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
@@ -67,21 +72,17 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	{
 		try
 		{
-			RFHarvesterLogger.debug("client.deleteByQuery(\"collection_id:(" + collectionID + ")\");");
-			UpdateResponse SOLRresponse = client.deleteByQuery("collection_id:(" + collectionID + ")");
+			RFHarvesterLogger.debug("client_new.deleteByQuery(\"*:*\");");
+			UpdateResponse SOLRresponse = client_new.deleteByQuery("*:*");
+
 			RFHarvesterLogger.debug(SOLRresponse.toString());
+			RFHarvesterLogger.info("Commit client_new deletions.");
+			client_new.commit();
+			RFHarvesterLogger.info("Deletions commited");
 		}
 		catch(SolrServerException | IOException e)
 		{
-			e.printStackTrace();
-			try
-			{
-				client.rollback();
-			}
-			catch (SolrServerException | IOException e1)
-			{
-				e1.printStackTrace();
-			}
+			RFHarvesterLogger.error(RFHarvesterLogger.exceptionToString(e));
 			System.exit(0); // Program won't run with uninitialized SOLR.
 		}
 	}
@@ -91,9 +92,9 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		RFHarvesterLogger.info("Initializing " + this.getClass().getName());
 		String zookeepersList = zookeepers.toString().substring(1, zookeepers.toString().length()-1).replaceAll(" ", "");
 
-		client = new CloudSolrClient(zookeepersList);
-		System.out.println("Connection with " + client.getZkHost() + " established");
-		client.setDefaultCollection("notices");
+		client_new = new CloudSolrClient(zookeepersList);
+		System.out.println("Connection with " + client_new.getZkHost() + " established");
+		client_new.setDefaultCollection("notices_new");
 
 		this.collectionID = collectionID;
 		this.collectionName = collectionName;
@@ -102,6 +103,10 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		
 		initTable();
 		initTodayDate();
+
+		client = new CloudSolrClient(zookeepersList);//zookeepersList);
+		System.out.println("Connection with " + client.getZkHost() + " established");
+		client.setDefaultCollection("notices");
 	}
 
 	public void commit()
@@ -114,7 +119,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 				RFHarvesterLogger.warning("Empty SOLR notices set");
 				return;
 			}
-			responseAdding = client.add(notices);
+			responseAdding = client_new.add(notices);
 		}
 		catch(SolrServerException | IOException e)
 		{
@@ -334,7 +339,7 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 			try
 			{
 				RFHarvesterLogger.info("client_new.deleteByQuery(\"id:(" + error + ")\");");
-				UpdateResponse SOLRresponse = client.deleteByQuery("id:(" + error + ")");
+				UpdateResponse SOLRresponse = client_new.deleteByQuery("id:(" + error + ")");
 				RFHarvesterLogger.debug(SOLRresponse.toString());
 			}
 			catch(SolrServerException | IOException e)
@@ -344,26 +349,63 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 		}
 	}
 
+	private void mergeNoticesNewNotices()
+	{
+		try
+		{
+			final String SOLR1url = "http://10.1.2.216:8983/solr/";
+			final String SOLR2url = "http://10.1.2.218:8983/solr/";
+			SolrClient solr1core = new HttpSolrClient(SOLR1url);
+			System.out.println("Connection with " + SOLR1url + " established");
+			SolrClient solr2core = new HttpSolrClient(SOLR2url);
+			System.out.println("Connection with " + SOLR2url + " established");
+
+
+			String[] solrindexesdirs = new String[] {};
+
+			String[] solr1cores = new String[] { "notices_new_shard1_replica2" };
+			String[] solr2cores = new String[] { "notices_new_shard1_replica1" };
+			System.out.println("Merging solrcores " + solr1cores[0] + " into notices_shard1_replica1");
+			System.out.println("Merging solrcores " + solr2cores[0] + " into notices_shard1_replica2");
+
+			CoreAdminResponse mergeResponse1 = CoreAdminRequest.mergeIndexes("notices_shard1_replica1", solrindexesdirs, solr1cores, solr1core);
+			System.out.println(mergeResponse1.getResponse().toString());
+			CoreAdminResponse mergeResponse2 = CoreAdminRequest.mergeIndexes("notices_shard1_replica2", solrindexesdirs, solr2cores, solr2core);
+			System.out.println(mergeResponse2.getResponse().toString());
+		}
+		catch(SolrServerException | IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	public void replaceOldTable() throws RFHarvesterUploaderV2Exception
 	{
 		try
 		{
 			RFHarvesterLogger.info("Commit Solr modifications");
-
-			client.commit();
+			client_new.commit();
 			RFHarvesterLogger.info("SOLR commited");
+			
+			
+			mergeNoticesNewNotices();
+
+
+			System.out.println("Commit Solr merge");
+			client.commit();
+			System.out.println("SOLR merged");
 		}
 		catch(SolrServerException | IOException e)
 		{
-			e.printStackTrace();
+			RFHarvesterLogger.error(RFHarvesterLogger.exceptionToString(e));
 			try
 			{
-				client.rollback();
+				client_new.rollback();
 				RFHarvesterLogger.info("Client rollbacked");
 			}
 			catch (SolrServerException | IOException e1)
 			{
-				e1.printStackTrace();
+				RFHarvesterLogger.error(RFHarvesterLogger.exceptionToString(e1));
 			}
 		}
 	}
