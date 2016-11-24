@@ -353,6 +353,17 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	{
 		try
 		{
+			RFHarvesterLogger.info("client.deleteByQuery(\"collection_id:(" + collectionID + ")\");");
+			UpdateResponse SOLRresponse = client.deleteByQuery("collection_id:(" + collectionID + ")");
+			RFHarvesterLogger.debug(SOLRresponse.toString());
+		}
+		catch(SolrServerException | IOException e)
+		{
+			RFHarvesterLogger.error(RFHarvesterLogger.exceptionToString(e));
+			System.exit(0); // Program won't run with uninitialized SOLR.
+		}
+		try
+		{
 			final String SOLR1url = "http://10.1.2.216:8983/solr/";
 			final String SOLR2url = "http://10.1.2.218:8983/solr/";
 			SolrClient solr1core = new HttpSolrClient(SOLR1url);
