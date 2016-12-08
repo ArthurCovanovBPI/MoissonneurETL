@@ -21,17 +21,17 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 {
 	private String URL;
 	private String URLADDITION;
-	private String defaultDocumentType;
+	//private String defaultDocumentType;
 	private RFHarvesterTransformatorInterfaceV2 transformator;
 	private RFHarvesterUploaderV2Interface uploader;
 
 	private Proxy proxy;
 
-	public OAIDownloader(String URL, String URLADDITION, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader, String defaultDocumentType)
+	public OAIDownloader(String URL, String URLADDITION, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader)
 	{
 		this.URL = URL;
 		this.URLADDITION = ((URLADDITION==null)? "" : URLADDITION);
-		this.defaultDocumentType = defaultDocumentType;
+		//this.defaultDocumentType = defaultDocumentType;
 		this.transformator = transformator;
 		this.uploader = uploader;
 		this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.1.2.30", 3128));
@@ -91,12 +91,12 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 				ArrayList<String> ID = new ArrayList<String>();
 				ID.add(record.getHeader().getIdentifier().replaceAll("·", "."));
 				transformation.put("OAI_ID", ID);
-				if(defaultDocumentType != null)
+				/*if(defaultDocumentType != null)
 				{
 					ArrayList<String> OAIDefaultDocumentType = new ArrayList<String>();
 					OAIDefaultDocumentType.add(defaultDocumentType);
 					transformation.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
-				}
+				}*/
 				uploader.insertRow(transformation);
 				inserts++;
 			}
@@ -167,12 +167,12 @@ public class OAIDownloader implements RFHarvesterDownloaderInterfaceV2
 						ArrayList<String> ID = new ArrayList<String>();
 						ID.add(record.getHeader().getIdentifier().replaceAll("·", "."));
 						transformation.put("OAI_ID", ID);
-						if(defaultDocumentType != null)
+						/*if(defaultDocumentType != null)
 						{
 							ArrayList<String> OAIDefaultDocumentType = new ArrayList<String>();
 							OAIDefaultDocumentType.add(defaultDocumentType);
 							transformation.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
-						}
+						}*/
 						uploader.insertRow(transformation);
 						inserts++;
 					}

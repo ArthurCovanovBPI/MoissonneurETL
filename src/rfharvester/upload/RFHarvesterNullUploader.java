@@ -23,6 +23,11 @@ public class RFHarvesterNullUploader implements RFHarvesterUploaderV2Interface
 		return out;
 	}
 
+	public void confirm() throws RFHarvesterUploaderV2Exception
+	{
+		
+	}
+
 	public void end() throws RFHarvesterUploaderV2Exception
 	{
 		

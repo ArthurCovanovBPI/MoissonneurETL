@@ -1,6 +1,7 @@
 package rfharvester.upload;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -312,7 +313,21 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 //				document.setDocumentBoost(dateBoost(dateDocument) + Integer.parseInt(row.get("solr_boost").get(0)));
 		}
 		else if(collectionID == 5)
+		{
 			document.setDocumentBoost(Integer.parseInt(row.get("solr_boost").get(0)));
+		}
+		else
+		{
+			try
+			{
+				document.addField("date_document", simpleDateParse("1000-01-01T23:59:59Z"));
+			}
+			catch (ParseException e1)
+			{
+				RFHarvesterLogger.warning("Unable to parse in date format: 1000-01-01T23:59:59Z for " + row.get("OAI_ID").get(0) + " - " + row.get("titres") + RFHarvesterLogger.exceptionToString(e1));
+				throw new RFHarvesterUploaderV2Exception();
+			}
+		}
 
 		lastDocument = document;
 
@@ -425,6 +440,11 @@ public class UploadNoticesSolr5V2 implements RFHarvesterUploaderV2Interface
 	public void end() throws RFHarvesterUploaderV2Exception
 	{
 		commit();
+	}
+
+	@Override
+	public void confirm() throws RFHarvesterUploaderV2Exception
+	{
 		replaceOldTable();
 	}
 }

@@ -11,6 +11,9 @@ import rfharvester.download.OAIDownloader;
 import rfharvester.download.ONIXDownloader;
 import rfharvester.download.RFHarvesterDownloaderInterfaceV2;
 import rfharvester.download.RFHarvesterDownloaderV2Exception;
+import rfharvester.indexor.IndexorException;
+import rfharvester.indexor.IndexorInterface;
+import rfharvester.indexor.IndexorSolr5;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
 import rfharvester.transformator.RFHarvesterCodeTransformator;
@@ -44,6 +47,7 @@ public class HarvestConfiguration
 	private RFHarvesterDownloaderInterfaceV2 downloader;
 	private RFHarvesterTransformatorInterfaceV2 transformator;
 	private RFHarvesterUploaderV2Interface uploader;
+	private IndexorInterface indexor;
 
 	public HarvestConfiguration() throws SQLException, ClassNotFoundException
 	{
@@ -76,7 +80,7 @@ public class HarvestConfiguration
 		disponibilite.put("dispo_broadcast_group", "");
 	}
 
-	public void prepareProgram() throws HarvestConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
+	public void prepareProgram() throws HarvestConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException, IndexorException
 	{
 		if(RFHarvesterState.checkRunningStatus() != 1)
 		{
@@ -100,7 +104,7 @@ public class HarvestConfiguration
 		switch(harvesterID)
 		{
 			case "1": //Portfolio
-				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+				/*SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
 				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
@@ -113,10 +117,10 @@ public class HarvestConfiguration
 
 				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
 
-//				downloader = new PortfolioDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
+//				downloader = new PortfolioDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);*/
 			break;
 			case "3": //OAI_DC
-				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+				//SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
 				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
@@ -125,12 +129,14 @@ public class HarvestConfiguration
 
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
-				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+				uploader = new RFHarvesterUploaderV2Bundle(/*SOLR5V2Uploader, */ControlsUploader, MetadatasUploader, CollectionsUploader);
 
-				downloader = new OAIDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
+				downloader = new OAIDownloader(downloadURL, downloadURLADDITION, transformator, uploader);
+
+				indexor = new IndexorSolr5(MySQLUploadDB, recomandedCommit, collectionID, collectionName, disponibilite, defaultDocumentType);
 			break;
 			case "4": //ONIX_DC
-				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+				//SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
 				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
@@ -139,12 +145,14 @@ public class HarvestConfiguration
 
 				transformator = new RFHarvesterCodeTransformator(transformationCode);
 
-				uploader = new RFHarvesterUploaderV2Bundle(SOLR5V2Uploader, ControlsUploader, MetadatasUploader, CollectionsUploader);
+				uploader = new RFHarvesterUploaderV2Bundle(/*SOLR5V2Uploader, */ControlsUploader, MetadatasUploader, CollectionsUploader);
 
-				downloader = new ONIXDownloader(downloadURL, downloadURLADDITION, transformator, uploader, defaultDocumentType);
+				downloader = new ONIXDownloader(downloadURL, downloadURLADDITION, transformator, uploader);
+
+				indexor = new IndexorSolr5(MySQLUploadDB, recomandedCommit, collectionID, collectionName, disponibilite, defaultDocumentType);
 			break;
 			case "5": //CSV
-				SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
+				/*SOLR5V2Uploader = new UploadNoticesSolr5V2(recomandedCommit, collectionID, collectionName, disponibilite);
 
 				MySQLUploadDB = "10.1.2.108/lf_prod";
 				ControlsUploader = new UploadControlsMySQL5V2(MySQLUploadDB, recomandedCommit, collectionID, collectionName);
@@ -157,14 +165,14 @@ public class HarvestConfiguration
 //				uploader = new RFHarvesterUploaderV2Bundle(ControlsUploader, MetadatasUploader, CollectionsUploader);
 //				uploader = new RFHarvesterNullUploader();
 
-				downloader = new CSVURLDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);
+				downloader = new CSVURLDownloader(downloadURL, CSVSeparator, transformator, uploader, defaultDocumentType);*/
 			break;
 			default:
 				throw new HarvestConfigurationException("Unsetted harvester " + harvesterID);
 		}
 	}
 
-	public void loadConfiguration(int ID) throws HarvestConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException
+	public void loadConfiguration(int ID) throws HarvestConfigurationException, RFHarvesterUploaderV2Exception, SQLException, ClassNotFoundException, IndexorException
 	{
 		RFHarvesterLogger.info("Loading configuration " + ID);
 		int type = ResultSet.TYPE_FORWARD_ONLY;
@@ -212,9 +220,23 @@ public class HarvestConfiguration
 		prepareProgram();
 	}
 
-	public void run() throws RFHarvesterDownloaderV2Exception, RFHarvesterUploaderV2Exception
+	public void run() throws RFHarvesterDownloaderV2Exception, RFHarvesterUploaderV2Exception, IndexorException
 	{
+		RFHarvesterLogger.info("I/O");
 		downloader.download();
 		uploader.end();
+		RFHarvesterLogger.info("Indexation");
+		try
+		{
+			indexor.indexUploads();
+		}
+		catch (IndexorException e)
+		{
+			e.printStackTrace();
+			RFHarvesterLogger.error("Unable to index downloaded datas!!! Operation aborded:" + RFHarvesterLogger.exceptionToString(e));
+			throw e;
+		}
+		RFHarvesterLogger.info("Confirmation");
+		uploader.confirm();
 	}
 }

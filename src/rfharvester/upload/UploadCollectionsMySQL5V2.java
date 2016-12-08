@@ -56,7 +56,7 @@ public class UploadCollectionsMySQL5V2 implements RFHarvesterUploaderV2Interface
 
 	public UploadCollectionsMySQL5V2(String uploadDB, int collectionId) throws SQLException, ClassNotFoundException
 	{
-		this.uploadDB = "jdbc:mysql://" + uploadDB + "?characterEncoding=ISO-8859-1&autoReconnect=true";
+		this.uploadDB = "jdbc:mysql://" + uploadDB + "?autoReconnect=true&characterEncoding=ISO-8859-1";
 
 		collection_id = collectionId;
 		RFHarvesterLogger.info("Initializing " + this.getClass().getName());
@@ -89,6 +89,19 @@ public class UploadCollectionsMySQL5V2 implements RFHarvesterUploaderV2Interface
 		try
 		{
 			replaceStoredValue();
+		}
+		catch(SQLException e)
+		{
+			throw new RFHarvesterUploaderV2Exception(e);
+		}
+	}
+
+	@Override
+	public void confirm() throws RFHarvesterUploaderV2Exception
+	{
+		try
+		{
+			end();
 			replaceOldTable();
 		}
 		catch(SQLException e)

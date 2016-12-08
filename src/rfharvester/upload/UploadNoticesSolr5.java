@@ -172,7 +172,9 @@ public class UploadNoticesSolr5 implements RFHarvesterUploaderInterface
 					RFHarvesterLogger.error("Unable to parse solr_date_document: (" + rows.get("solr_id") + ", " + rows.get("solr_title") + ", " + rows.get("solr_date_document") + ")");
 					document.addField("date_document", dateDocumentFormatter.parse("1000-01-01T23:59:59Z"));
 				}
-			} 
+			}
+			else
+				document.addField("date_document", dateDocumentFormatter.parse("1000-01-01T23:59:59Z"));
 			document.addField("dispo_sur_poste", new String(rows.get("solr_dispo_sur_poste").getBytes(), "UTF-8"));
 			document.addField("dispo_bibliotheque", new String(rows.get("solr_dispo_bibliotheque").getBytes(), "UTF-8"));
 			document.addField("dispo_access_libre", new String(rows.get("solr_dispo_access_libre").getBytes(), "UTF-8"));

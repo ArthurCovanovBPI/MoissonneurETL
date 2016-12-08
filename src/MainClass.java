@@ -14,6 +14,7 @@ import rfharvester.ExitCodes;
 import rfharvester.download.PortfolioDownloader;
 import rfharvester.download.RFHarvesterDownloaderInterface;
 import rfharvester.download.RFHarvesterDownloaderV2Exception;
+import rfharvester.indexor.IndexorException;
 import rfharvester.logger.RFHarvesterDatation;
 import rfharvester.logger.RFHarvesterLogger;
 import rfharvester.logger.RFHarvesterState;
@@ -251,7 +252,7 @@ public class MainClass
 		authoritiesSOLRUploader.replaceOldTable();
 	}
 
-	private void runConfiguration(String configurationIDString) throws SQLException, ClassNotFoundException, HarvestConfigurationException, RFHarvesterDownloaderV2Exception, RFHarvesterUploaderV2Exception
+	private void runConfiguration(String configurationIDString) throws SQLException, ClassNotFoundException, HarvestConfigurationException, RFHarvesterDownloaderV2Exception, RFHarvesterUploaderV2Exception, IndexorException
 	{
 		RFHarvesterLogger.info("Running configuration: "+configurationIDString);
 		try

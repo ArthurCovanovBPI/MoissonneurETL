@@ -178,13 +178,15 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 		String out = null;
 
 		if(startedTransaction == false)
-		try
 		{
-			begin();
-		}
-		catch(SQLException e)
-		{
-			throw new RFHarvesterUploaderV2Exception(e);
+			try
+			{
+				begin();
+			}
+			catch(SQLException e)
+			{
+				throw new RFHarvesterUploaderV2Exception(e);
+			}
 		}
 
 		String query = "";
@@ -357,6 +359,20 @@ public class UploadMetadatasMySQL5V2 implements RFHarvesterUploaderV2Interface
 		try
 		{
 			commit();
+		}
+		catch(SQLException e)
+		{
+			throw new RFHarvesterUploaderV2Exception(e);
+		}
+	}
+
+	@Override
+	public void confirm() throws RFHarvesterUploaderV2Exception
+	{
+		try
+		{
+			if(startedTransaction == true)
+				throw new RFHarvesterUploaderV2Exception("Unable to confirm table, transaction in progress.");
 			replaceOldTable();
 		}
 		catch(SQLException e)

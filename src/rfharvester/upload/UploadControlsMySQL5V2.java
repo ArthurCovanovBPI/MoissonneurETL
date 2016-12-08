@@ -303,6 +303,20 @@ public class UploadControlsMySQL5V2 implements RFHarvesterUploaderV2Interface
 		try
 		{
 			commit();
+		}
+		catch(SQLException e)
+		{
+			throw new RFHarvesterUploaderV2Exception(e);
+		}
+	}
+
+	@Override
+	public void confirm() throws RFHarvesterUploaderV2Exception
+	{
+		try
+		{
+			if(startedTransaction == true)
+				throw new RFHarvesterUploaderV2Exception("Unable to confirm table, transaction in progress.");
 			replaceOldTable();
 		}
 		catch(SQLException e)

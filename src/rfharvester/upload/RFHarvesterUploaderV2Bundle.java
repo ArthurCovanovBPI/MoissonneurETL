@@ -33,6 +33,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 		}
 	}
 
+	@Override
 	public void dropLast()
 	{
 		//Then we insert in other uploaders
@@ -42,6 +43,7 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 		}
 	}
 
+	@Override
 	public String insertRow(final HashMap<String, ArrayList<String>> row) throws RFHarvesterUploaderV2Exception
 	{
 		String out = null;
@@ -91,25 +93,26 @@ public class RFHarvesterUploaderV2Bundle implements RFHarvesterUploaderV2Interfa
 		return out;
 	}
 
+	@Override
 	public void end() throws RFHarvesterUploaderV2Exception
 	{
 		if(uploaders != null)
 		{
-			//Special case for control, we need control's ID to insert in other tables
 			for(RFHarvesterUploaderV2Interface uploader : uploaders)
 			{
-				if(uploader.getClass().toString().compareTo(UploadNoticesSolr5V2.class.toString())==0)
-				{
-					uploader.end();
-				}
+				uploader.end();
 			}
-			//Then we insert in other uploaders
+		}
+	}
+
+	@Override
+	public void confirm() throws RFHarvesterUploaderV2Exception
+	{
+		if(uploaders != null)
+		{
 			for(RFHarvesterUploaderV2Interface uploader : uploaders)
 			{
-				if(uploader.getClass().toString().compareTo(UploadNoticesSolr5V2.class.toString())!=0)
-				{
-					uploader.end();
-				}
+				uploader.confirm();
 			}
 		}
 	}
