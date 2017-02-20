@@ -1,8 +1,5 @@
 package rfharvester.indexor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  * @author ArthurCovanov
  *

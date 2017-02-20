@@ -25,7 +25,7 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 	private final int collection_id;
 	private final int maxModifiedRecords = 100000;
 	private final int sqlPushRecords = 20000;
-	private final int minHarvest = 410000;
+	private final int minHarvest = 400000;
 	private Connection externalDBConnection = null;
 	private Connection localSqliteConnection = null;
 	private Connection uploadDBConnection = null;
@@ -733,6 +733,7 @@ public class PortfolioDownloader implements RFHarvesterDownloaderInterface
 			{
 				RFHarvesterLogger.error("Less than " + minHarvest + " harvested notices.\n                                                 Harvest canceled.");
 				RFHarvesterState.updateStatus("ERREUR!!!");
+				RFHarvesterState.updateMessage("Less than " + minHarvest + " harvested notices.");
 				System.exit(0);
 			}
 			if(transfoFailCount != 0)

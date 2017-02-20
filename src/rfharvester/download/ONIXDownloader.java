@@ -21,17 +21,17 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 {
 	private String URL;
 	private String URLADDITION;
-//	private String defaultDocumentType;
+	private String defaultDocumentType;//TODO Remove Default Document Type
 	private RFHarvesterTransformatorInterfaceV2 transformator;
 	private RFHarvesterUploaderV2Interface uploader;
 
 	private Proxy proxy;
 
-	public ONIXDownloader(String URL, String URLADDITION, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader)
+	public ONIXDownloader(String URL, String URLADDITION, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader, String defaultDocumentType)
 	{
 		this.URL = URL;
 		this.URLADDITION = ((URLADDITION==null)? "" : URLADDITION);
-//		this.defaultDocumentType = defaultDocumentType;
+		this.defaultDocumentType = defaultDocumentType;//TODO Remove Default Document Type
 		this.transformator = transformator;
 		this.uploader = uploader;
 		this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.1.2.30", 3128));
@@ -91,12 +91,12 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 				ArrayList<String> ID = new ArrayList<String>();
 				ID.add(record.getHeader().getIdentifier().replaceAll("·", ".")); //TODO Delete this replaceAll
 				transformation.put("OAI_ID", ID); //TODO Make it a proper ONIX_ID value
-				/*if(defaultDocumentType != null)
+				if(defaultDocumentType != null)//TODO Remove Default Document Type
 				{
 					ArrayList<String> ONIXDefaultDocumentType = new ArrayList<String>();
 					ONIXDefaultDocumentType.add(defaultDocumentType);
 					transformation.put("OAI_defaultDocumentType", ONIXDefaultDocumentType); //TODO Make it a proper ONIX_defaultDocumentType value
-				}*/
+				}
 				uploader.insertRow(transformation);
 				inserts++;
 			}
@@ -167,12 +167,12 @@ public class ONIXDownloader implements RFHarvesterDownloaderInterfaceV2
 						ArrayList<String> ID = new ArrayList<String>();
 						ID.add(record.getHeader().getIdentifier().replaceAll("·", ".")); //TODO Delete this replaceAll
 						transformation.put("OAI_ID", ID); //TODO Make it a proper ONIX_ID value
-						/*if(defaultDocumentType != null)
+						if(defaultDocumentType != null)
 						{
 							ArrayList<String> ONIXDefaultDocumentType = new ArrayList<String>();
 							ONIXDefaultDocumentType.add(defaultDocumentType);
 							transformation.put("OAI_defaultDocumentType", ONIXDefaultDocumentType); //TODO Make it a proper ONIX_defaultDocumentType value
-						}*/
+						}
 						uploader.insertRow(transformation);
 						inserts++;
 					}

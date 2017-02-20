@@ -53,8 +53,6 @@ public class IndexorSolr5 implements IndexorInterface
 
 	private String todayDate;
 
-	SolrInputDocument lastDocument = null;
-
 	private void initTodayDate()
 	{
 		Calendar c = new GregorianCalendar();
@@ -138,7 +136,9 @@ public class IndexorSolr5 implements IndexorInterface
 		document.addField("title_sort", normalizeTitleSort(titleString));
 
 		if(row.containsKey("dc_subject"))
-			document.addField("subject", RFHarvesterUtilities.arrayListToString(row.get("dc_subject "), "; "));
+		{
+			document.addField("subject", RFHarvesterUtilities.arrayListToString(row.get("dc_subject"), "; "));
+		}
 
 		ArrayList<String> creators = new ArrayList<String>();
 
@@ -223,8 +223,6 @@ public class IndexorSolr5 implements IndexorInterface
 			}
 		}
 
-		lastDocument = document;
-
 		notices.add(document);
 
 		if(notices.size() >= recomandedCommit)
@@ -245,14 +243,14 @@ public class IndexorSolr5 implements IndexorInterface
 		try
 		{
 			ResultSet metadatasColumns;
-			metadatasColumns = downloadDBConnection.getMetaData().getColumns(null, null, "metadatas", null);
+			metadatasColumns = downloadDBConnection.getMetaData().getColumns(null, null, "metadatas_new", null);
 			while(metadatasColumns.next())
 			{
 				columns.add(metadatasColumns.getString(4));
 			}
 			metadatasColumns.close();
 			ResultSet controlsColumns;
-			controlsColumns = downloadDBConnection.getMetaData().getColumns(null, null, "controls", null);
+			controlsColumns = downloadDBConnection.getMetaData().getColumns(null, null, "controls_new", null);
 			while(controlsColumns.next())
 			{
 				columns.add(controlsColumns.getString(4));
@@ -267,11 +265,7 @@ public class IndexorSolr5 implements IndexorInterface
 
 //		System.out.println(columns);
 
-		query = "SELECT * FROM metadatas INNER JOIN controls ON metadatas.controls_id = controls.id WHERE metadatas.collection_id = " + collectionID;
-//		query = "SELECT * FROM " + localTableName + " LIMIT 100000";
-//		query = "SELECT * FROM " + localTableName + " LIMIT 400000  OFFSET 200000";
-//		query = "SELECT * FROM " + localTableName + " WHERE dc_identifier = '1309585'";
-//		query = "SELECT * FROM " + localTableName + " WHERE dc_identifier = '331752' OR dc_identifier = '331753' OR dc_identifier = '331754'";
+		query = "SELECT * FROM metadatas_new INNER JOIN controls_new ON metadatas_new.controls_id = controls_new.id WHERE metadatas_new.collection_id = " + collectionID;
 		Statement downloadDBStatement = null;
 
 		int type = ResultSet.TYPE_FORWARD_ONLY;
@@ -281,10 +275,8 @@ public class IndexorSolr5 implements IndexorInterface
 			downloadDBStatement = downloadDBConnection.createStatement(type, mode);
 			ResultSet storedNotices = downloadDBStatement.executeQuery(query);
 
-			int i = 1;
 			while(storedNotices.next())
 			{
-				//System.out.println(i++ + " : ");
 				//Build a row from datas getted in MySQL
 				HashMap<String, ArrayList<String>> row = new HashMap<String, ArrayList<String>>();
 				
@@ -298,13 +290,6 @@ public class IndexorSolr5 implements IndexorInterface
 					{
 						try
 						{
-							/*if(column.compareTo("dc_title")==0)
-							{
-								System.out.println("\tDefault : " + value);
-								System.out.println("\tUTF-8 : " + new String(value.getBytes("8859_1"), "UTF-8"));
-								System.out.println("\tISO-8859-1 : " + new String(value.getBytes("8859_1"), "ISO-8859-1"));
-								System.out.println("###");
-							}*/
 							values.add(new String(value.getBytes("8859_1"), "UTF-8"));
 						}
 						catch (UnsupportedEncodingException e)
@@ -320,17 +305,6 @@ public class IndexorSolr5 implements IndexorInterface
 					OAIDefaultDocumentType.add(defaultDocumentType);
 					row.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
 				}
-
-
-				/*ArrayList<String> OAI_ID = new ArrayList<String>();
-				OAI_ID.add(storedNotices.getString("oai_identifier"));
-				row.put("OAI_ID", OAI_ID);
-
-				ArrayList<String> controlsID = new ArrayList<String>();
-				controlsID.add(storedNotices.getString("controls_id"));
-				row.put("controlsID", controlsID);*/
-
-
 
 				//Send the built row to SOLR
 

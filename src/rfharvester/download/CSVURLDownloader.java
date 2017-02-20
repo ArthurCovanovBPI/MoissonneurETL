@@ -17,15 +17,15 @@ public class CSVURLDownloader implements RFHarvesterDownloaderInterfaceV2
 {
 	private String URL;
 	private String CSVSeparator;
-	private String defaultDocumentType;
+	//private String defaultDocumentType;
 	private RFHarvesterTransformatorInterfaceV2 transformator;
 	private RFHarvesterUploaderV2Interface uploader;
 
-	public CSVURLDownloader(String URL, String CSVSeparator, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader, String defaultDocumentType)
+	public CSVURLDownloader(String URL, String CSVSeparator, RFHarvesterTransformatorInterfaceV2 transformator, RFHarvesterUploaderV2Interface uploader/*, String defaultDocumentType*/)
 	{
 		this.URL = URL;
 		this.CSVSeparator = CSVSeparator;
-		this.defaultDocumentType = defaultDocumentType;
+		//this.defaultDocumentType = defaultDocumentType;
 		this.transformator = transformator;
 		this.uploader = uploader;
 	}
@@ -57,12 +57,12 @@ public class CSVURLDownloader implements RFHarvesterDownloaderInterfaceV2
 
 //				System.out.println("#" + transformation);
 				transformation = transformator.transform(transformation); //Have to contain OAI_ID
-				if(defaultDocumentType != null)
+				/*if(defaultDocumentType != null)
 				{
 					ArrayList<String> OAIDefaultDocumentType = new ArrayList<String>();
 					OAIDefaultDocumentType.add(defaultDocumentType);
 					transformation.put("OAI_defaultDocumentType", OAIDefaultDocumentType);
-				}
+				}*/
 //				System.out.println("~" + transformation);
 
 				try
